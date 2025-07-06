@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Registrations - Graham's Table Tennis Tournament</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div class="wide-container">
+        <div class="header">
+            <h1>Graham's Table Tennis Tournament</h1>
+            <div class="header-subtitle">Tournament Registration Overview</div>
+        </div>
+
+        <div class="content">
+            <div class="sports-imagery">
+                <div class="paddle"></div>
+                <div class="ball"></div>
+                <div class="paddle"></div>
+            </div>
+
+            <h2>Tournament Registrations</h2>
+
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-number" th:text="${#lists.size(registrations)}">0</div>
+                    <div class="stat-label">Total Registrations</div>
+                </div>
+                <div class="stat-box" th:each="tournament : ${tournamentCounts}" th:if="${tournament.value > 0}">
+                    <div class="stat-number" th:text="${tournament.value}">0</div>
+                    <div class="stat-label" th:text="${tournament.key}">Tournament Name</div>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(registrations)}" class="no-registrations">
+                <h3>No registrations yet</h3>
+                <p>Be the first to register for the tournament!</p>
+            </div>
+
+            <div th:if="${not #lists.isEmpty(registrations)}">
+                <table class="registrations-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>First Name</th>
+                            <th>Surname</th>
+                            <th>Email</th>
+                            <th>Tournament</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="registration, iterStat : ${registrations}">
+                            <td th:text="${iterStat.count}">1</td>
+                            <td th:text="${registration.firstName}">John</td>
+                            <td th:text="${registration.surname}">Doe</td>
+                            <td th:text="${registration.email}">john@example.com</td>
+                            <td>
+                                <span th:text="${registration.tournament.name}"
+                                      class="tournament-badge tournament-dynamic">
+                                    Tournament Name
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <a href="/admin" class="back-button">← Back to Admin</a>
+        </div>
+    </div>
+</body>
+</html>

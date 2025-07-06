@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament List - Graham's Table Tennis Tournament</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div class="wide-container">
+        <div class="header">
+            <h1>Graham's Table Tennis Tournament</h1>
+            <div class="header-subtitle">Tournament Management</div>
+        </div>
+
+        <div class="content">
+            <div class="sports-imagery">
+                <div class="paddle"></div>
+                <div class="ball"></div>
+                <div class="paddle"></div>
+            </div>
+
+            <h2>Available Tournaments</h2>
+
+            <div class="action-buttons">
+                <a href="/tournaments/new" class="btn btn-primary">+ Create New Tournament</a>
+                <a href="/admin" class="btn btn-secondary">← Back to Admin</a>
+            </div>
+
+            <div th:if="${#lists.isEmpty(tournaments)}" class="no-tournaments">
+                <h3>No tournaments available</h3>
+                <p>Create your first tournament to get started!</p>
+            </div>
+
+            <div th:if="${not #lists.isEmpty(tournaments)}" class="tournaments-grid">
+                <div th:each="tournament : ${tournaments}" class="tournament-card">
+                    <h3 class="tournament-name" th:text="${tournament.name}">Tournament Name</h3>
+                    <div class="tournament-date">
+                        📅 <span th:text="${#temporals.format(tournament.date, 'EEEE, MMMM d, yyyy')}">Date</span>
+                    </div>
+                    <div class="tournament-time">
+                        🕐 <span th:text="${#temporals.format(tournament.time, 'h:mm a')}">Time</span>
+                    </div>
+                    <div class="tournament-location">
+                        📍 <span th:text="${tournament.location}">Location</span>
+                    </div>
+                    <p class="tournament-description" th:text="${tournament.description}">Description</p>
+                    <div class="tournament-capacity">
+                        👥 Max Entrants: <span th:text="${tournament.maxEntrants}">0</span>
+                    </div>
+
+                    <!-- Registered Participants Section -->
+                    <div class="registered-participants">
+                        <h4 class="participants-title">Registered Participants</h4>
+                        <div th:if="${tournamentRegistrations[tournament.id] != null and #lists.size(tournamentRegistrations[tournament.id]) > 0}">
+                            <div class="participants-count">
+                                <span th:text="${#lists.size(tournamentRegistrations[tournament.id])}">0</span> /
+                                <span th:text="${tournament.maxEntrants}">0</span> registered
+                            </div>
+                            <div class="participants-list">
+                                <div th:each="registration : ${tournamentRegistrations[tournament.id]}" class="participant-item">
+                                    <span class="participant-name" th:text="${registration.firstName + ' ' + registration.surname}">Name</span>
+                                    <span class="participant-email" th:text="${registration.email}">Email</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${tournamentRegistrations[tournament.id] == null or #lists.isEmpty(tournamentRegistrations[tournament.id])}" class="no-participants">
+                            <span>No participants registered yet</span>
+                        </div>
+                    </div>
+
+                    <div class="tournament-actions">
+                        <a th:href="@{/tournaments/edit/{id}(id=${tournament.id})}" class="edit-btn">✏️ Edit</a>
+                        <form th:action="@{/tournaments/delete/{id}(id=${tournament.id})}" method="post" style="display: inline; margin-left: 10px;" onsubmit="return confirm('Are you sure you want to delete this tournament? This action cannot be undone.')">
+                            <button type="submit" class="delete-btn">🗑️ Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

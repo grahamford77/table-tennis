@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Graham's Table Tennis Tournament</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div class="wide-container">
+        <div class="header">
+            <h1>Graham's Table Tennis Tournament</h1>
+            <div class="header-subtitle">Administration Dashboard</div>
+            <!-- Add user info and logout -->
+            <div class="user-info">
+                <span>Welcome, <strong th:text="${username}">Admin</strong></span>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="sports-imagery">
+                <div class="paddle"></div>
+                <div class="ball"></div>
+                <div class="paddle"></div>
+            </div>
+
+            <h2>Admin Control Panel</h2>
+
+            <!-- Summary Statistics -->
+            <div class="admin-stats">
+                <div class="admin-stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-value" th:text="${totalTournaments}">0</div>
+                    <div class="stat-label">Total Tournaments</div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value" th:text="${totalRegistrations}">0</div>
+                    <div class="stat-label">Total Registrations</div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value" th:text="${activeTournaments}">0</div>
+                    <div class="stat-label">Active Tournaments</div>
+                </div>
+            </div>
+
+            <!-- Tournament Breakdown -->
+            <div th:if="${not #maps.isEmpty(tournamentCounts)}" class="tournament-breakdown">
+                <h3>Tournament Registration Breakdown</h3>
+                <div class="breakdown-grid">
+                    <div th:each="tournament : ${tournamentCounts}" class="breakdown-item">
+                        <span class="tournament-name" th:text="${tournament.key}">Tournament Name</span>
+                        <span class="registration-count" th:text="${tournament.value} + ' registrations'">0 registrations</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Actions -->
+            <div class="admin-actions">
+                <h3>Administrative Functions</h3>
+                <div class="admin-menu">
+                    <a href="/tournaments" class="admin-menu-item">
+                        <div class="menu-icon">🏓</div>
+                        <div class="menu-content">
+                            <h4>Manage Tournaments</h4>
+                            <p>Create, edit, and view all tournaments with participant lists</p>
+                        </div>
+                        <div class="menu-arrow">→</div>
+                    </a>
+
+                    <a href="/registrations" class="admin-menu-item">
+                        <div class="menu-icon">📋</div>
+                        <div class="menu-content">
+                            <h4>View Registrations</h4>
+                            <p>See all player registrations with detailed statistics</p>
+                        </div>
+                        <div class="menu-arrow">→</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Quick Access -->
+            <div class="quick-access">
+                <h3>Quick Access</h3>
+                <div class="quick-buttons">
+                    <a href="/tournaments/new" class="btn btn-primary">+ Create New Tournament</a>
+                    <a href="/" class="btn btn-secondary">View Public Registration Page</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

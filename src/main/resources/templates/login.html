@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Graham's Table Tennis Tournament</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Graham's Table Tennis Tournament</h1>
+            <div class="header-subtitle">Admin Login</div>
+        </div>
+
+        <div class="content">
+            <div class="sports-imagery">
+                <div class="paddle"></div>
+                <div class="ball bounce"></div>
+                <div class="paddle"></div>
+            </div>
+
+            <div class="form-section">
+                <h2>Admin Access</h2>
+                <p class="form-description">
+                    Please enter your credentials to access the admin area.
+                </p>
+
+                <!-- Success/Error Messages -->
+                <div th:if="${message}" class="success-message" style="background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%); margin-bottom: 20px; padding: 15px; border-radius: 10px; color: white; text-align: center;">
+                    <span th:text="${message}"></span>
+                </div>
+
+                <div th:if="${error}" class="error-message" style="background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); margin-bottom: 20px; padding: 15px; border-radius: 10px; color: white; text-align: center;">
+                    <span th:text="${error}"></span>
+                </div>
+
+                <form th:action="@{/login}" method="post" class="login-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required autofocus />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required />
+                    </div>
+
+                    <button type="submit" class="submit-btn">Login</button>
+                </form>
+
+                <div class="nav-links">
+                    <a href="/" class="nav-link secondary-link">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

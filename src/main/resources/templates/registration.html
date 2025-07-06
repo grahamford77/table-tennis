@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graham's Table Tennis Tournament Registration</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Graham's Table Tennis Tournament</h1>
+            <div class="header-subtitle">Join the Ultimate Championship Experience</div>
+        </div>
+
+        <div class="content">
+            <div class="sports-imagery">
+                <div class="paddle"></div>
+                <div class="ball bounce"></div>
+                <div class="paddle"></div>
+            </div>
+
+            <div class="form-section">
+                <h2>Tournament Registration</h2>
+                <p class="form-description">
+                    Ready to serve up some excitement? Register now for Graham's premier table tennis tournament
+                    and compete against the best players in your skill level.
+                </p>
+
+                <form th:action="@{/register}" th:object="${registration}" method="post">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" th:field="*{firstName}" placeholder="Enter your first name" />
+                        <div class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="surname">Surname</label>
+                        <input type="text" id="surname" th:field="*{surname}" placeholder="Enter your surname" />
+                        <div class="error" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" th:field="*{email}" placeholder="Enter your email address" />
+                        <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tournamentId">Tournament</label>
+                        <select id="tournamentId" name="tournamentId" required>
+                            <option value="">Select a tournament...</option>
+                            <option th:each="tournament : ${tournaments}"
+                                    th:value="${tournament.id}"
+                                    th:text="${tournament.displayName}">
+                                Tournament Name
+                            </option>
+                        </select>
+                        <div class="error" th:if="${#fields.hasErrors('tournament')}" th:errors="*{tournament}"></div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Register for Tournament</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

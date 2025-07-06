@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Tournament - Graham's Table Tennis Tournament</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Graham's Table Tennis Tournament</h1>
+            <div class="header-subtitle">Create New Tournament</div>
+        </div>
+
+        <div class="content">
+            <div class="sports-imagery">
+                <div class="paddle"></div>
+                <div class="ball pulse"></div>
+                <div class="paddle"></div>
+            </div>
+
+            <div class="form-section">
+                <h2>Create Tournament</h2>
+                <p class="form-description">
+                    Set up a new tournament with all the details players need to know.
+                    Fill in the information below to get started.
+                </p>
+
+                <form th:action="@{/tournaments/create}" th:object="${tournament}" method="post">
+                    <div class="form-group">
+                        <label for="name">Tournament Name</label>
+                        <input type="text" id="name" th:field="*{name}" placeholder="Enter tournament name" />
+                        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" th:field="*{description}" placeholder="Describe the tournament, rules, prize details, etc."></textarea>
+                        <div class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date">Date</label>
+                            <input type="date" id="date" th:field="*{date}" />
+                            <div class="error" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="time">Time</label>
+                            <input type="time" id="time" th:field="*{time}" />
+                            <div class="error" th:if="${#fields.hasErrors('time')}" th:errors="*{time}"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" th:field="*{location}" placeholder="Enter venue address or location" />
+                        <div class="error" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maxEntrants">Maximum Entrants</label>
+                        <input type="number" id="maxEntrants" th:field="*{maxEntrants}" min="1" placeholder="Enter maximum number of participants" />
+                        <div class="error" th:if="${#fields.hasErrors('maxEntrants')}" th:errors="*{maxEntrants}"></div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Create Tournament</button>
+                </form>
+
+                <div class="nav-links">
+                    <a href="/tournaments" class="nav-link">← Back to Tournaments</a>
+                    <a href="/" class="nav-link secondary-link">Registration Page</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
