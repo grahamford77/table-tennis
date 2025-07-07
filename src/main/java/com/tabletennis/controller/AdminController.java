@@ -1,6 +1,5 @@
 package com.tabletennis.controller;
 
-import com.tabletennis.entity.Game;
 import com.tabletennis.service.GameService;
 import com.tabletennis.service.RegistrationService;
 import com.tabletennis.service.TournamentService;
@@ -40,7 +39,7 @@ public class AdminController {
     public String showAdminDashboard(Model model, Authentication authentication) {
         // Get summary statistics for the dashboard
         var totalTournaments = tournamentService.findAllOrderByDate().size();
-        var totalRegistrations = registrationService.findAll().size();
+        var totalRegistrations = registrationService.findAllDto().size();
 
         // NEW: Count tournaments starting within the next 2 weeks
         var activeTournaments = tournamentService.countActiveTournaments();
@@ -92,15 +91,15 @@ public class AdminController {
             return REDIRECT_ADMIN;
         }
 
-        var games = gameService.getGamesForTournament(tournament);
+        var games = gameService.getGamesForTournamentDto(tournament);
         var totalGames = games.size();
-        var completedGames = games.stream().mapToLong(g -> g.getStatus() == Game.GameStatus.COMPLETED ? 1 : 0).sum();
+        var completedGames = games.stream().mapToLong(g -> "COMPLETED".equals(g.getStatus()) ? 1 : 0).sum();
 
         model.addAttribute("tournament", tournament);
         model.addAttribute("games", games);
         model.addAttribute("totalGames", totalGames);
         model.addAttribute("completedGames", completedGames);
-        model.addAttribute("registrations", registrationService.findByTournamentId(id));
+        model.addAttribute("registrations", registrationService.findByTournamentIdDto(id));
 
         // Add username to model for display
         if (authentication != null) {
@@ -117,7 +116,6 @@ public class AdminController {
             RedirectAttributes redirectAttributes) {
         try {
             var updatedGame = gameService.updateGameScore(gameId, player1Score, player2Score);
-            var tournament = updatedGame.getTournament();
 
             var message = "Game result updated: "
                     + updatedGame.getPlayer1Name()
@@ -130,7 +128,7 @@ public class AdminController {
 
             redirectAttributes.addFlashAttribute(SUCCESS_ATTRIBUTE, message);
 
-            return "redirect:/admin/tournaments/" + tournament.getId() + "/games";
+            return "redirect:/admin/tournaments/" + updatedGame.getTournamentId() + "/games";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute(ERROR_ATTRIBUTE, e.getMessage());
             return REDIRECT_ADMIN;

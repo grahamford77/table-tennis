@@ -1,43 +1,139 @@
 package com.tabletennis.service;
 
+import com.tabletennis.dto.TournamentDto;
+import com.tabletennis.dto.TournamentRequest;
 import com.tabletennis.entity.Tournament;
+import com.tabletennis.mapping.EntityToDtoMapper;
+import com.tabletennis.repository.TournamentRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Service interface for tournament management
+ * Service for tournament management
  */
-public interface TournamentService {
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class TournamentService {
+
+    private final TournamentRepository tournamentRepository;
+    private final GameService gameService;
+    private final RegistrationService registrationService;
+    private final EntityToDtoMapper mapper;
 
     /**
-     * Find all tournaments ordered by date
+     * Find all tournaments ordered by date and return as DTOs
      */
-    List<Tournament> findAllOrderByDate();
+    public List<TournamentDto> findAllOrderByDate() {
+        return tournamentRepository.findAllByOrderByDateAsc().stream()
+            .map(tournament -> {
+                var registrations = registrationService.findByTournamentDto(tournament);
+                var isStarted = gameService.isTournamentStarted(tournament);
+                return mapper.convertToDto(tournament, registrations, isStarted);
+            })
+            .toList();
+    }
 
     /**
-     * Find tournament by ID
+     * Find tournament by ID and return as DTO
      */
-    Optional<Tournament> findById(Long id);
+    public Optional<TournamentDto> findByIdDto(Long id) {
+        return tournamentRepository.findById(id)
+            .map(tournament -> {
+                var registrations = registrationService.findByTournamentDto(tournament);
+                var isStarted = gameService.isTournamentStarted(tournament);
+                return mapper.convertToDto(tournament, registrations, isStarted);
+            });
+    }
 
     /**
-     * Save tournament
+     * Find tournament entity by ID (for internal use)
      */
-    Tournament save(Tournament tournament);
+    public Optional<Tournament> findById(Long id) {
+        return tournamentRepository.findById(id);
+    }
+
+    /**
+     * Create new tournament from request DTO
+     */
+    public void createTournament(TournamentRequest tournamentRequest) {
+        var tournament = new Tournament();
+        setTournamentFields(tournament, tournamentRequest);
+        tournamentRepository.save(tournament);
+    }
+
+    /**
+     * Update tournament from request DTO
+     */
+    public void updateTournament(Long id, TournamentRequest tournamentRequest) {
+        var tournament = tournamentRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
+
+        setTournamentFields(tournament, tournamentRequest);
+        tournamentRepository.save(tournament);
+    }
 
     /**
      * Count tournaments starting within the next 2 weeks
+     * This is the new logic for "Active Tournaments"
      */
-    long countActiveTournaments();
+    public long countActiveTournaments() {
+        var today = LocalDate.now();
+        var twoWeeksFromNow = today.plusWeeks(2);
+
+        return tournamentRepository.findAll().stream()
+            .filter(tournament -> {
+                var tournamentDate = tournament.getDate();
+                return tournamentDate != null &&
+                       !tournamentDate.isBefore(today) &&
+                       !tournamentDate.isAfter(twoWeeksFromNow);
+            })
+            .count();
+    }
 
     /**
      * Delete tournament by ID
      */
-    void deleteById(Long id);
+    public void deleteById(Long id) {
+        tournamentRepository.deleteById(id);
+    }
 
     /**
-     * Find tournaments that are available for registration
-     * (not full and not started)
+     * Find tournaments that are available for registration and return as DTOs
      */
-    List<Tournament> findAvailableForRegistration();
+    public List<TournamentDto> findAvailableForRegistration() {
+        return tournamentRepository.findAllByOrderByDateAsc().stream()
+            .filter(tournament -> {
+                // Check if tournament has started (has games generated)
+                var hasStarted = gameService.isTournamentStarted(tournament);
+                if (hasStarted) {
+                    return false;
+                }
+
+                // Check if tournament is full
+                var registrationCount = registrationService.findByTournament(tournament).size();
+                var isFull = registrationCount >= tournament.getMaxEntrants();
+
+                return !isFull;
+            })
+            .map(mapper::convertToDto)
+            .toList();
+    }
+
+    /**
+     * Set tournament fields from request DTO
+     */
+    private void setTournamentFields(Tournament tournament, com.tabletennis.dto.TournamentRequest tournamentRequest) {
+        tournament.setName(tournamentRequest.getName());
+        tournament.setDescription(tournamentRequest.getDescription());
+        tournament.setDate(tournamentRequest.getDate());
+        tournament.setTime(tournamentRequest.getTime());
+        tournament.setLocation(tournamentRequest.getLocation());
+        tournament.setMaxEntrants(tournamentRequest.getMaxEntrants());
+    }
 }

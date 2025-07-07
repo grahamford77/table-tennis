@@ -69,7 +69,7 @@ public class RegistrationController {
 
     @GetMapping("/registrations")
     public String showRegistrations(Model model) {
-        var allRegistrations = registrationService.findAll();
+        var allRegistrations = registrationService.findAllDto();
         model.addAttribute("registrations", allRegistrations);
         model.addAttribute("tournamentCounts", registrationService.getTournamentCounts());
         return "registrations";
