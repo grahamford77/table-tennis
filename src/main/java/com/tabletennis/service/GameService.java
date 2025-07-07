@@ -99,6 +99,7 @@ public class GameService {
         game.setPlayer1Score(player1Score);
         game.setPlayer2Score(player2Score);
         game.setStatus(Game.GameStatus.COMPLETED);
+        game.setPlayedAt(java.time.LocalDateTime.now());
 
         return gameRepository.save(game);
     }

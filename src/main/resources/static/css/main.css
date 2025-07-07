@@ -166,24 +166,26 @@ textarea {
 
 /* Message display styles */
 .message {
-    padding: 15px;
-    border-radius: 8px;
+    padding: 15px 20px;
+    border-radius: 10px;
     margin-bottom: 20px;
     font-weight: 500;
     text-align: center;
-    display: none; /* Hidden by default */
+    display: block;
 }
 
 .message.success {
-    background-color: #e8f5e8;
-    color: #2e7d32;
-    border: 1px solid #c8e6c9;
+    background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 }
 
 .message.error {
-    background-color: #ffebee;
-    color: #d32f2f;
-    border: 1px solid #ffcdd2;
+    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
 }
 
 /* Login page specific message styles */
@@ -1118,6 +1120,127 @@ footer a:hover {
     margin-left: 10px;
 }
 
+/* Score Entry Styles */
+.score-entry {
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 10px;
+    border: 2px solid #e0f2f1;
+}
+
+.score-entry h4 {
+    color: #00DEB6;
+    font-size: 1.1em;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.score-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.score-inputs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.score-input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.score-input-group label {
+    font-size: 0.9em;
+    font-weight: 600;
+    color: #00DEB6;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.score-input {
+    width: 80px;
+    height: 50px;
+    font-size: 1.5em;
+    font-weight: 700;
+    text-align: center;
+    border: 2px solid #b2dfdb;
+    border-radius: 8px;
+    background: white;
+    color: #00695c;
+    transition: all 0.3s ease;
+}
+
+.score-input:focus {
+    border-color: #00DEB6;
+    box-shadow: 0 0 0 3px rgba(0, 222, 182, 0.2);
+    outline: none;
+}
+
+.score-separator {
+    font-size: 2em;
+    font-weight: 700;
+    color: #666;
+    margin: 0 10px;
+}
+
+.submit-score-btn {
+    background: linear-gradient(135deg, #00DEB6 0%, #00bfa3 100%);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1em;
+    align-self: center;
+    min-width: 150px;
+}
+
+.submit-score-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 222, 182, 0.3);
+}
+
+/* Game completion time styling */
+.game-completed-time {
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #666;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Player score placeholder styling */
+.player-score-placeholder {
+    display: block;
+    font-size: 2em;
+    font-weight: 700;
+    color: #ccc;
+}
+
+/* Enhanced game card styling for different states */
+.game-card.scheduled {
+    border-left: 4px solid #4fc3f7;
+}
+
+.game-card.completed {
+    border-left: 4px solid #4caf50;
+    background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%);
+}
+
+.game-card.in_progress {
+    border-left: 4px solid #ff9800;
+    background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+}
+
 /* Tournament Management Styles */
 .tournament-management-item {
     display: flex;
@@ -1186,6 +1309,27 @@ footer a:hover {
 .start-tournament-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.manage-tournament-btn {
+    background: linear-gradient(135deg, #4fc3f7 0%, #0288d1 100%);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9em;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.manage-tournament-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79, 195, 247, 0.3);
+    color: white;
+    text-decoration: none;
 }
 
 .tournament-status {
@@ -1333,11 +1477,6 @@ footer a:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(0, 222, 182, 0.2);
     border-color: #00DEB6;
-}
-
-.game-card.completed {
-    border-color: #4caf50;
-    background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%);
 }
 
 .game-header {
@@ -1559,5 +1698,26 @@ footer a:hover {
 
     .vs {
         margin: 10px 0;
+    }
+
+    /* Score Entry Styles */
+    .score-inputs {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .score-separator {
+        transform: rotate(90deg);
+        margin: 10px 0;
+    }
+
+    .score-input {
+        width: 100px;
+        height: 60px;
+        font-size: 1.8em;
+    }
+
+    .score-input-group label {
+        font-size: 1em;
     }
 }

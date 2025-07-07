@@ -69,6 +69,11 @@
             <!-- Games Schedule -->
             <div class="games-section">
                 <h3>Games Schedule (Round Robin)</h3>
+
+                <!-- Success/Error Messages -->
+                <div th:if="${success}" class="message success" th:text="${success}"></div>
+                <div th:if="${error}" class="message error" th:text="${error}"></div>
+
                 <div class="games-grid">
                     <div th:each="game : ${games}" class="game-card" th:classappend="${game.status.toString().toLowerCase()}">
                         <div class="game-header">
@@ -79,14 +84,37 @@
                             <div class="player player1">
                                 <span class="player-name" th:text="${game.player1Name}">Player 1</span>
                                 <span class="player-score" th:if="${game.player1Score != null}" th:text="${game.player1Score}">0</span>
+                                <span class="player-score-placeholder" th:if="${game.player1Score == null}">-</span>
                             </div>
                             <div class="vs">VS</div>
                             <div class="player player2">
                                 <span class="player-name" th:text="${game.player2Name}">Player 2</span>
                                 <span class="player-score" th:if="${game.player2Score != null}" th:text="${game.player2Score}">0</span>
+                                <span class="player-score-placeholder" th:if="${game.player2Score == null}">-</span>
                             </div>
                         </div>
-                        <div class="game-footer" th:if="${game.status == T(com.tabletennis.entity.Game.GameStatus).COMPLETED}">
+
+                        <!-- Score Entry Form for Scheduled Games -->
+                        <div th:if="${game.status == T(com.tabletennis.entity.Game.GameStatus).SCHEDULED}" class="score-entry">
+                            <h4>Enter Result</h4>
+                            <form th:action="@{/admin/games/{gameId}/result(gameId=${game.id})}" method="post" class="score-form">
+                                <div class="score-inputs">
+                                    <div class="score-input-group">
+                                        <label th:text="${game.player1Name} + ' Score'">Player 1 Score</label>
+                                        <input type="number" name="player1Score" min="0" max="21" required class="score-input">
+                                    </div>
+                                    <div class="score-separator">-</div>
+                                    <div class="score-input-group">
+                                        <label th:text="${game.player2Name} + ' Score'">Player 2 Score</label>
+                                        <input type="number" name="player2Score" min="0" max="21" required class="score-input">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary submit-score-btn">Submit Result</button>
+                            </form>
+                        </div>
+
+                        <!-- Game Result for Completed Games -->
+                        <div th:if="${game.status == T(com.tabletennis.entity.Game.GameStatus).COMPLETED}" class="game-footer">
                             <span class="game-winner" th:if="${game.player1Score > game.player2Score}">
                                 🏆 Winner: <span th:text="${game.player1Name}">Player 1</span>
                             </span>
@@ -96,6 +124,9 @@
                             <span class="game-winner" th:if="${game.player1Score == game.player2Score}">
                                 🤝 Draw
                             </span>
+                            <div class="game-completed-time" th:if="${game.playedAt != null}">
+                                Completed: <span th:text="${#temporals.format(game.playedAt, 'dd MMM yyyy HH:mm')}">Date Time</span>
+                            </div>
                         </div>
                     </div>
                 </div>
