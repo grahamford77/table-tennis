@@ -27,12 +27,12 @@
                 </p>
 
                 <!-- Success/Error Messages -->
-                <div th:if="${message}" class="success-message" style="background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%); margin-bottom: 20px; padding: 15px; border-radius: 10px; color: white; text-align: center;">
-                    <span th:text="${message}"></span>
+                <div th:if="${message}" class="success-message" th:text="${message}">
+                    Success message
                 </div>
 
-                <div th:if="${error}" class="error-message" style="background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); margin-bottom: 20px; padding: 15px; border-radius: 10px; color: white; text-align: center;">
-                    <span th:text="${error}"></span>
+                <div th:if="${error}" class="error-message" th:text="${error}">
+                    Error message
                 </div>
 
                 <form th:action="@{/login}" method="post" class="login-form">
@@ -49,9 +49,6 @@
                     <button type="submit" class="submit-btn">Login</button>
                 </form>
 
-                <div class="nav-links">
-                    <a href="/" class="nav-link secondary-link">Back to Home</a>
-                </div>
             </div>
         </div>
     </div>

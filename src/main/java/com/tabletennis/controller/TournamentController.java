@@ -1,10 +1,13 @@
 package com.tabletennis.controller;
 
+import com.tabletennis.dto.RegistrationRequest;
+import com.tabletennis.dto.TournamentRequest;
 import com.tabletennis.entity.Tournament;
 import com.tabletennis.entity.TournamentRegistration;
 import com.tabletennis.service.RegistrationService;
 import com.tabletennis.service.TournamentService;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -42,36 +46,24 @@ public class TournamentController {
     }
 
     @PostMapping("/register")
-    public String processRegistration(@ModelAttribute("registration") TournamentRegistration registration,
-                                    BindingResult result,
-                                    @RequestParam(value = "tournamentId", required = false) Long tournamentId,
-                                    Model model) {
+    public ResponseEntity<?> processRegistration(@Valid @RequestBody RegistrationRequest registrationRequest) {
+        try {
+            // Find the tournament
+            Tournament tournament = tournamentService.findById(registrationRequest.getTournamentId())
+                .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
 
-        // First check if tournament was selected
-        if (tournamentId == null) {
-            result.rejectValue("tournament", "error.tournament", "Please select a tournament");
-        } else {
-            // Set the tournament on the registration object
-            Tournament tournament = tournamentService.findById(tournamentId).orElse(null);
-            if (tournament == null) {
-                result.rejectValue("tournament", "error.tournament", "Please select a valid tournament");
-            } else {
-                registration.setTournament(tournament);
-            }
+            // Create registration entity
+            TournamentRegistration registration = new TournamentRegistration();
+            registration.setFirstName(registrationRequest.getFirstName());
+            registration.setSurname(registrationRequest.getSurname());
+            registration.setEmail(registrationRequest.getEmail());
+            registration.setTournament(tournament);
+
+            registrationService.save(registration);
+            return ResponseEntity.ok().body("{\"success\": true, \"message\": \"Registration successful\"}");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"success\": false, \"message\": \"" + e.getMessage() + "\"}");
         }
-
-        // Now manually validate the registration object with tournament set
-        if (registration.getTournament() != null) {
-            validateRegistrationFields(registration, result);
-        }
-
-        if (result.hasErrors()) {
-            model.addAttribute("tournaments", tournamentService.findAllOrderByDate());
-            return "registration";
-        }
-
-        registrationService.save(registration);
-        return "redirect:/success";
     }
 
     @GetMapping("/success")
@@ -108,14 +100,21 @@ public class TournamentController {
     }
 
     @PostMapping("/tournaments/create")
-    public String createTournament(@Valid @ModelAttribute("tournament") Tournament tournament,
-                                 BindingResult result) {
-        if (result.hasErrors()) {
-            return "create-tournament";
-        }
+    public ResponseEntity<?> createTournament(@Valid @RequestBody TournamentRequest tournamentRequest) {
+        try {
+            Tournament tournament = new Tournament();
+            tournament.setName(tournamentRequest.getName());
+            tournament.setDescription(tournamentRequest.getDescription());
+            tournament.setDate(tournamentRequest.getDate());
+            tournament.setTime(tournamentRequest.getTime());
+            tournament.setLocation(tournamentRequest.getLocation());
+            tournament.setMaxEntrants(tournamentRequest.getMaxEntrants());
 
-        tournamentService.save(tournament);
-        return "redirect:/tournaments";
+            tournamentService.save(tournament);
+            return ResponseEntity.ok().body("{\"success\": true, \"message\": \"Tournament created successfully\"}");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"success\": false, \"message\": \"" + e.getMessage() + "\"}");
+        }
     }
 
     @GetMapping("/tournaments/edit/{id}")
@@ -129,26 +128,38 @@ public class TournamentController {
     }
 
     @PostMapping("/tournaments/edit/{id}")
-    public String updateTournament(@PathVariable Long id,
-                                 @Valid @ModelAttribute("tournament") Tournament tournament,
-                                 BindingResult result) {
-        if (result.hasErrors()) {
-            tournament.setId(id); // Ensure the ID is preserved for the form
-            return "edit-tournament";
-        }
+    public ResponseEntity<?> updateTournament(@PathVariable Long id,
+                                            @Valid @RequestBody TournamentRequest tournamentRequest) {
+        try {
+            Tournament tournament = tournamentService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
 
-        tournament.setId(id); // Ensure we're updating the correct tournament
-        tournamentService.save(tournament);
-        return "redirect:/tournaments";
+            tournament.setName(tournamentRequest.getName());
+            tournament.setDescription(tournamentRequest.getDescription());
+            tournament.setDate(tournamentRequest.getDate());
+            tournament.setTime(tournamentRequest.getTime());
+            tournament.setLocation(tournamentRequest.getLocation());
+            tournament.setMaxEntrants(tournamentRequest.getMaxEntrants());
+
+            tournamentService.save(tournament);
+            return ResponseEntity.ok().body("{\"success\": true, \"message\": \"Tournament updated successfully\"}");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"success\": false, \"message\": \"" + e.getMessage() + "\"}");
+        }
     }
 
     @PostMapping("/tournaments/delete/{id}")
-    public String deleteTournament(@PathVariable Long id) {
-        // Check if tournament exists before deleting
-        if (tournamentService.findById(id).isPresent()) {
-            tournamentService.deleteById(id);
+    public ResponseEntity<?> deleteTournament(@PathVariable Long id) {
+        try {
+            if (tournamentService.findById(id).isPresent()) {
+                tournamentService.deleteById(id);
+                return ResponseEntity.ok().body("{\"success\": true, \"message\": \"Tournament deleted successfully\"}");
+            } else {
+                return ResponseEntity.badRequest().body("{\"success\": false, \"message\": \"Tournament not found\"}");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("{\"success\": false, \"message\": \"" + e.getMessage() + "\"}");
         }
-        return "redirect:/tournaments";
     }
 
     private void validateRegistrationFields(TournamentRegistration registration, BindingResult result) {

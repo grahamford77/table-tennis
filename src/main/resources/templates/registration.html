@@ -27,23 +27,25 @@
                     and compete against the best players in your skill level.
                 </p>
 
-                <form th:action="@{/register}" th:object="${registration}" method="post">
+                <div id="message" class="message hidden"></div>
+
+                <form id="registrationForm">
                     <div class="form-group">
                         <label for="firstName">First Name</label>
-                        <input type="text" id="firstName" th:field="*{firstName}" placeholder="Enter your first name" />
-                        <div class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+                        <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" required />
+                        <div class="error" id="firstNameError"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="surname">Surname</label>
-                        <input type="text" id="surname" th:field="*{surname}" placeholder="Enter your surname" />
-                        <div class="error" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></div>
+                        <input type="text" id="surname" name="surname" placeholder="Enter your surname" required />
+                        <div class="error" id="surnameError"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email Address</label>
-                        <input type="email" id="email" th:field="*{email}" placeholder="Enter your email address" />
-                        <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                        <input type="email" id="email" name="email" placeholder="Enter your email address" required />
+                        <div class="error" id="emailError"></div>
                     </div>
 
                     <div class="form-group">
@@ -56,7 +58,7 @@
                                 Tournament Name
                             </option>
                         </select>
-                        <div class="error" th:if="${#fields.hasErrors('tournament')}" th:errors="*{tournament}"></div>
+                        <div class="error" id="tournamentError"></div>
                     </div>
 
                     <button type="submit" class="submit-btn">Register for Tournament</button>
@@ -64,5 +66,57 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Clear previous errors
+            document.querySelectorAll('.error').forEach(el => el.textContent = '');
+            document.getElementById('message').style.display = 'none';
+
+            // Get form data
+            const formData = {
+                firstName: document.getElementById('firstName').value,
+                surname: document.getElementById('surname').value,
+                email: document.getElementById('email').value,
+                tournamentId: parseInt(document.getElementById('tournamentId').value)
+            };
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    // Show success message and redirect
+                    document.getElementById('message').textContent = result.message;
+                    document.getElementById('message').className = 'message success';
+                    document.getElementById('message').style.display = 'block';
+
+                    // Redirect to success page after a short delay
+                    setTimeout(() => {
+                        window.location.href = '/success';
+                    }, 1500);
+                } else {
+                    // Show error message
+                    document.getElementById('message').textContent = result.message || 'Registration failed';
+                    document.getElementById('message').className = 'message error';
+                    document.getElementById('message').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('message').textContent = 'An error occurred. Please try again.';
+                document.getElementById('message').className = 'message error';
+                document.getElementById('message').style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>

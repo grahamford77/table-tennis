@@ -359,14 +359,178 @@ textarea {
     min-height: 120px;
 }
 
+/* Error message styles */
 .error {
+    display: none;
     color: #d32f2f;
-    font-size: 14px;
+    font-size: 0.875rem;
     margin-top: 5px;
-    padding: 5px;
-    background: #ffebee;
-    border-radius: 5px;
-    border-left: 4px solid #d32f2f;
+    padding: 5px 10px;
+    background-color: #ffebee;
+    border: 1px solid #ffcdd2;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.error:not(:empty) {
+    display: block;
+}
+
+/* Message display styles */
+.message {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    text-align: center;
+    display: none; /* Hidden by default */
+}
+
+.message.success {
+    background-color: #e8f5e8;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+
+.message.error {
+    background-color: #ffebee;
+    color: #d32f2f;
+    border: 1px solid #ffcdd2;
+}
+
+/* Login page specific message styles */
+.success-message {
+    background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+}
+
+.error-message {
+    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+}
+
+/* Text alignment utilities */
+.text-center {
+    text-align: center;
+}
+
+/* Hidden element utility */
+.hidden {
+    display: none;
+}
+
+/* Tournament banner styles */
+.tournament-banner {
+    background: linear-gradient(135deg, #00695c 0%, #004d40 100%);
+    color: white;
+    padding: 50px 30px;
+    border-radius: 15px;
+    margin-bottom: 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.tournament-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 1;
+}
+
+.tournament-banner h2 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 2;
+}
+
+.tournament-banner p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.tournament-banner a {
+    display: inline-block;
+    padding: 15px 30px;
+    background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+    color: white;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.tournament-banner a:hover {
+    background: linear-gradient(135deg, #388e3c 0%, #4caf50 100%);
+}
+
+/* Main content styles */
+main {
+    margin-bottom: 40px;
+}
+
+/* Footer styles */
+footer {
+    background: linear-gradient(135deg, #004d40 0%, #00332e 100%);
+    color: white;
+    padding: 30px 20px;
+    border-radius: 15px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    z-index: 1;
+}
+
+footer h2 {
+    font-size: 2em;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 2;
+}
+
+footer p {
+    font-size: 1em;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+footer a {
+    color: #4caf50;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+footer a:hover {
+    text-decoration: underline;
 }
 
 /* Button styles */
@@ -917,6 +1081,22 @@ textarea {
 }
 
 .no-registrations h3 {
+    color: #00695c;
+    margin-bottom: 15px;
+    font-size: 1.8em;
+}
+
+.no-tournaments {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 60px 40px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    border: 2px dashed #b2dfdb;
+}
+
+.no-tournaments h3 {
     color: #00695c;
     margin-bottom: 15px;
     font-size: 1.8em;

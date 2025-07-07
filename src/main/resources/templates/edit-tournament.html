@@ -27,43 +27,47 @@
                     before saving changes.
                 </p>
 
-                <form th:action="@{/tournaments/edit/{id}(id=${tournament.id})}" th:object="${tournament}" method="post">
+                <div id="message" class="message hidden"></div>
+
+                <form id="editTournamentForm">
+                    <input type="hidden" id="tournamentId" th:value="${tournament.id}" />
+
                     <div class="form-group">
                         <label for="name">Tournament Name</label>
-                        <input type="text" id="name" th:field="*{name}" placeholder="Enter tournament name" />
-                        <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        <input type="text" id="name" name="name" th:value="${tournament.name}" placeholder="Enter tournament name" required />
+                        <div class="error" id="nameError"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <textarea id="description" th:field="*{description}" placeholder="Describe the tournament, rules, prize details, etc."></textarea>
-                        <div class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                        <textarea id="description" name="description" placeholder="Describe the tournament, rules, prize details, etc." required th:text="${tournament.description}"></textarea>
+                        <div class="error" id="descriptionError"></div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
                             <label for="date">Date</label>
-                            <input type="date" id="date" th:field="*{date}" />
-                            <div class="error" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></div>
+                            <input type="date" id="date" name="date" th:value="${tournament.date}" required />
+                            <div class="error" id="dateError"></div>
                         </div>
 
                         <div class="form-group">
                             <label for="time">Time</label>
-                            <input type="time" id="time" th:field="*{time}" />
-                            <div class="error" th:if="${#fields.hasErrors('time')}" th:errors="*{time}"></div>
+                            <input type="time" id="time" name="time" th:value="${tournament.time}" required />
+                            <div class="error" id="timeError"></div>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="location">Location</label>
-                        <input type="text" id="location" th:field="*{location}" placeholder="Enter venue address or location" />
-                        <div class="error" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></div>
+                        <input type="text" id="location" name="location" th:value="${tournament.location}" placeholder="Enter venue address or location" required />
+                        <div class="error" id="locationError"></div>
                     </div>
 
                     <div class="form-group">
                         <label for="maxEntrants">Maximum Entrants</label>
-                        <input type="number" id="maxEntrants" th:field="*{maxEntrants}" min="1" placeholder="Enter maximum number of participants" />
-                        <div class="error" th:if="${#fields.hasErrors('maxEntrants')}" th:errors="*{maxEntrants}"></div>
+                        <input type="number" id="maxEntrants" name="maxEntrants" th:value="${tournament.maxEntrants}" min="1" placeholder="Enter maximum number of participants" required />
+                        <div class="error" id="maxEntrantsError"></div>
                     </div>
 
                     <button type="submit" class="submit-btn">Update Tournament</button>
@@ -76,5 +80,61 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('editTournamentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Clear previous errors
+            document.querySelectorAll('.error').forEach(el => el.textContent = '');
+            document.getElementById('message').style.display = 'none';
+
+            const tournamentId = document.getElementById('tournamentId').value;
+
+            // Get form data
+            const formData = {
+                name: document.getElementById('name').value,
+                description: document.getElementById('description').value,
+                date: document.getElementById('date').value,
+                time: document.getElementById('time').value,
+                location: document.getElementById('location').value,
+                maxEntrants: parseInt(document.getElementById('maxEntrants').value)
+            };
+
+            try {
+                const response = await fetch(`/tournaments/edit/${tournamentId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    // Show success message and redirect
+                    document.getElementById('message').textContent = result.message;
+                    document.getElementById('message').className = 'message success';
+                    document.getElementById('message').style.display = 'block';
+
+                    // Redirect to tournaments page after a short delay
+                    setTimeout(() => {
+                        window.location.href = '/tournaments';
+                    }, 1500);
+                } else {
+                    // Show error message
+                    document.getElementById('message').textContent = result.message || 'Failed to update tournament';
+                    document.getElementById('message').className = 'message error';
+                    document.getElementById('message').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('message').textContent = 'An error occurred. Please try again.';
+                document.getElementById('message').className = 'message error';
+                document.getElementById('message').style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>
