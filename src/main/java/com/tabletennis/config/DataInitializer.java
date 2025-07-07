@@ -24,17 +24,17 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Check if admin user already exists
-        if (userService.findByUsername("graham").isEmpty()) {
+        if (userService.findByUsername("admin").isEmpty()) {
             // Generate a secure random password
             String randomPassword = generateSecurePassword();
 
             // Create admin user
-            userService.createUser("graham", randomPassword, User.Role.ADMIN);
+            userService.createUser("admin", randomPassword, User.Role.ADMIN);
 
             // Log the password for the user (in production, this would be sent securely)
             System.out.println("=====================================");
             System.out.println("ADMIN USER CREATED SUCCESSFULLY");
-            System.out.println("Username: graham");
+            System.out.println("Username: admin");
             System.out.println("Password: " + randomPassword);
             System.out.println("=====================================");
             System.out.println("IMPORTANT: Save this password securely!");
