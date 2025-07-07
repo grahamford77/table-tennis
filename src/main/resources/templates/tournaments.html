@@ -59,8 +59,8 @@
                             </div>
                             <div class="participants-list">
                                 <div th:each="registration : ${tournamentRegistrations[tournament.id]}" class="participant-item">
-                                    <span class="participant-name" th:text="${registration.firstName + ' ' + registration.surname}">Name</span>
-                                    <span class="participant-email" th:text="${registration.email}">Email</span>
+                                    <span class="participant-name" th:text="${registration.player.firstName + ' ' + registration.player.surname}">Name</span>
+                                    <span class="participant-email" th:text="${registration.player.email}">Email</span>
                                 </div>
                             </div>
                         </div>

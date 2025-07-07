@@ -34,4 +34,10 @@ public interface TournamentService {
      * Delete tournament by ID
      */
     void deleteById(Long id);
+
+    /**
+     * Find tournaments that are available for registration
+     * (not full and not started)
+     */
+    List<Tournament> findAvailableForRegistration();
 }

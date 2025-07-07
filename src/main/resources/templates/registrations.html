@@ -52,9 +52,9 @@
                     <tbody>
                         <tr th:each="registration, iterStat : ${registrations}">
                             <td th:text="${iterStat.count}">1</td>
-                            <td th:text="${registration.firstName}">John</td>
-                            <td th:text="${registration.surname}">Doe</td>
-                            <td th:text="${registration.email}">john@example.com</td>
+                            <td th:text="${registration.player.firstName}">John</td>
+                            <td th:text="${registration.player.surname}">Doe</td>
+                            <td th:text="${registration.player.email}">john@example.com</td>
                             <td>
                                 <span th:text="${registration.tournament.name}"
                                       class="tournament-badge tournament-dynamic">

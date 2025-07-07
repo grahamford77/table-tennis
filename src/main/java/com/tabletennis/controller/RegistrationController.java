@@ -34,7 +34,7 @@ public class RegistrationController {
     @GetMapping("/")
     public String showRegistrationForm(Model model) {
         model.addAttribute("registration", new TournamentRegistration());
-        model.addAttribute("tournaments", tournamentService.findAllOrderByDate());
+        model.addAttribute("tournaments", tournamentService.findAvailableForRegistration());
         return "registration";
     }
 

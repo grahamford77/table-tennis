@@ -19,6 +19,8 @@ import java.util.Optional;
 public class TournamentServiceImpl implements TournamentService {
 
     private final TournamentRepository tournamentRepository;
+    private final GameService gameService;
+    private final RegistrationService registrationService;
 
     @Override
     public List<Tournament> findAllOrderByDate() {
@@ -57,5 +59,24 @@ public class TournamentServiceImpl implements TournamentService {
     @Override
     public void deleteById(Long id) {
         tournamentRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Tournament> findAvailableForRegistration() {
+        return tournamentRepository.findAllByOrderByDateAsc().stream()
+            .filter(tournament -> {
+                // Check if tournament has started (has games generated)
+                var hasStarted = gameService.isTournamentStarted(tournament);
+                if (hasStarted) {
+                    return false;
+                }
+
+                // Check if tournament is full
+                var registrationCount = registrationService.findByTournament(tournament).size();
+                var isFull = registrationCount >= tournament.getMaxEntrants();
+
+                return !isFull;
+            })
+            .toList();
     }
 }

@@ -1,24 +1,49 @@
-# Rightmove Table Tennis Portal Registration System
+# Rightmove Table Tennis Portal
 
-A comprehensive Spring Boot web application for managing table tennis tournament registrations with a professional teal and white design.
+A comprehensive Spring Boot web application for managing table tennis tournaments with player registration, round-robin game management, and administrative features.
 
 ## 🏓 Features
 
-- **Tournament Management**: Create, edit, and view tournaments with details like date, time, location, and participant limits
-- **Player Registration**: Simple form-based registration system with validation
-- **Registration Tracking**: View all registrations with dynamic statistics and tournament breakdowns
-- **Professional UI**: Modern, responsive design with CSS animations and table tennis imagery
-- **Data Persistence**: H2 database with file-based storage for data persistence across restarts
+### Tournament Management
+- **Create Tournaments**: Add new tournaments with name, description, date, time, location, and maximum entrants
+- **Edit Tournaments**: Modify existing tournament details
+- **Delete Tournaments**: Remove tournaments from the system
+- **Tournament Listing**: View all tournaments with registration counts and participant details
+- **Active Tournament Tracking**: Monitor tournaments starting within the next 2 weeks
+
+### Player Registration
+- **Registration Form**: Simple, responsive form for tournament registration
+- **Player Management**: Automatic player creation and management by email
+- **Validation**: Comprehensive form validation with error handling
+- **Registration Tracking**: View all registrations with tournament breakdowns
+
+### Game Management
+- **Round-Robin Tournament**: Automatic generation of games where each player plays every other player
+- **Game Scheduling**: Systematic game ordering and management
+- **Score Recording**: Enter and update game results
+- **Tournament Progress**: Track completion status and statistics
+
+### Administrative Features
+- **Admin Dashboard**: Comprehensive overview with tournament statistics
+- **User Authentication**: Secure login system with role-based access
+- **Admin-Only Areas**: Protected tournament management and game administration
+- **Registration Overview**: View all player registrations and tournament participants
+
+### Technical Features
+- **Database Management**: Liquibase-based schema versioning and data migration
+- **Multi-Environment Support**: Separate configurations for local H2 and production PostgreSQL
+- **Docker Support**: Containerized deployment with Docker
+- **Professional UI**: Modern, responsive design with Rightmove branding
+- **RESTful API**: JSON-based endpoints for form submissions
 
 ## 🚀 Getting Started
 
 ### Prerequisites
+- Java 21 or higher
+- Gradle 8.0 or higher
+- Docker (optional, for containerized deployment)
 
-- Java 17 or higher
-- Gradle 7.0 or higher
-- Git
-
-### Installation
+### Local Development
 
 1. **Clone the repository**
    ```bash
@@ -43,218 +68,199 @@ A comprehensive Spring Boot web application for managing table tennis tournament
      - Username: `sa`
      - Password: (leave empty)
 
-## 📋 Application Structure
+### Docker Deployment
 
-### Layers Architecture
+1. **Build Docker image**
+   ```bash
+   docker build -t table-tennis-app .
+   ```
 
+2. **Run with Docker**
+   ```bash
+   docker run -p 10000:10000 table-tennis-app
+   ```
+
+3. **Access the application**
+   - Application: http://localhost:10000
+
+## 🏗️ Architecture
+
+### Technology Stack
+- **Backend**: Spring Boot 3.3.5, Spring Security, Spring Data JPA
+- **Database**: H2 (local), PostgreSQL (production)
+- **Frontend**: Thymeleaf, HTML5, CSS3, JavaScript
+- **Build Tool**: Gradle
+- **Database Migration**: Liquibase
+- **Testing**: JUnit 5, Spring Boot Test
+
+### Project Structure
 ```
-┌─────────────────┐
-│   Controllers   │ ← Web Layer (HTTP requests/responses)
-├─────────────────┤
-│    Services     │ ← Business Logic Layer
-├─────────────────┤
-│  Repositories   │ ← Data Access Layer
-├─────────────────┤
-│    Entities     │ ← Data Model Layer
-└─────────────────┘
-```
-
-### Package Structure
-
-```
-com.tabletennis/
-├── controller/          # Web controllers
-│   └── TournamentController.java
-├── service/            # Business logic services
-│   ├── TournamentService.java
-│   ├── TournamentServiceImpl.java
-│   ├── RegistrationService.java
-│   └── RegistrationServiceImpl.java
-├── repository/         # Data access repositories
-│   ├── TournamentRepository.java
-│   └── TournamentRegistrationRepository.java
-├── entity/            # JPA entities
-│   ├── Tournament.java
-│   └── TournamentRegistration.java
-└── TableTennisApplication.java
-```
-
-## 🎯 API Endpoints
-
-### Web Pages
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/` | Tournament registration form |
-| POST | `/register` | Process registration submission |
-| GET | `/success` | Registration success page |
-| GET | `/registrations` | View all registrations |
-| GET | `/tournaments` | Tournament management page |
-| GET | `/tournaments/new` | Create tournament form |
-| POST | `/tournaments/create` | Process tournament creation |
-| GET | `/tournaments/edit/{id}` | Edit tournament form |
-| POST | `/tournaments/edit/{id}` | Process tournament update |
-
-### Database Access
-
-| Endpoint | Description |
-|----------|-------------|
-| `/h2-console` | H2 database web console |
-
-## 🗄️ Database Schema
-
-### Tournament Table
-```sql
-CREATE TABLE tournaments (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,
-    description VARCHAR(1000) NOT NULL,
-    date DATE NOT NULL,
-    time TIME NOT NULL,
-    location VARCHAR(255) NOT NULL,
-    max_entrants INTEGER NOT NULL
-);
+src/
+├── main/
+│   ├── java/com/tabletennis/
+│   │   ├── config/           # Security and password configuration
+│   │   ├── controller/       # REST controllers (Admin, Auth, Registration, Tournament)
+│   │   ├── dto/             # Data transfer objects
+│   │   ├── entity/          # JPA entities (Tournament, Player, Game, User, etc.)
+│   │   ├── repository/      # Data access layer
+│   │   └── service/         # Business logic layer
+│   └── resources/
+│       ├── db/changelog/    # Liquibase database migrations
+│       ├── static/css/      # Stylesheets
+│       └── templates/       # Thymeleaf templates
+└── test/                    # Test classes and resources
 ```
 
-### Tournament Registration Table
-```sql
-CREATE TABLE tournament_registrations (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    first_name VARCHAR(255) NOT NULL,
-    surname VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    tournament_id BIGINT NOT NULL,
-    FOREIGN KEY (tournament_id) REFERENCES tournaments(id)
-);
-```
+### Database Schema
+- **tournaments**: Tournament information and details
+- **players**: Player profiles and contact information
+- **tournament_registrations**: Many-to-many relationship between players and tournaments
+- **games**: Individual game records with scores and status
+- **users**: Authentication and authorization data
 
-## 🎨 Frontend Features
+## 📱 User Interface
 
-### CSS Architecture
-- **External Stylesheet**: All styles moved to `/css/main.css`
-- **Responsive Design**: Mobile-first approach with breakpoints
-- **Animations**: CSS animations for table tennis elements
-- **Professional Theme**: Teal and white color scheme
+### Public Pages
+- **Registration Form** (`/`): Tournament registration for players
+- **Success Page** (`/success`): Confirmation after successful registration
+- **Login Page** (`/login`): Authentication for admin users
 
-### Interactive Elements
-- **Sports Imagery**: CSS-created table tennis paddles and balls
-- **Hover Effects**: Card animations and button interactions
-- **Form Validation**: Real-time validation with error messages
-- **Statistics Dashboard**: Dynamic tournament registration counts
+### Admin Pages (Authentication Required)
+- **Dashboard** (`/admin`): Overview with statistics and tournament management
+- **Tournament Management** (`/tournaments`): Create, edit, and delete tournaments
+- **Tournament Games** (`/admin/tournaments/{id}/games`): Game management and score entry
+- **Registration Overview** (`/registrations`): View all player registrations
 
-## 🧪 Testing
+## 🔐 Security
 
-### Test Coverage
-- **Unit Tests**: All service classes and entities
-- **Integration Tests**: Controller layer with MockMvc
-- **End-to-End Tests**: Complete application workflow
-- **Total Test Classes**: 6 comprehensive test suites
+### Authentication
+- **Admin Login**: Secure authentication with encrypted passwords
+- **Role-Based Access**: Admin role required for administrative functions
+- **Session Management**: Secure session handling with logout functionality
 
-### Running Tests
+### Password Security
+- **BCrypt Encryption**: Passwords encrypted with strength 12
+- **Secure Configuration**: Separated password configuration to avoid circular dependencies
+
+## 🗄️ Database Management
+
+### Liquibase Integration
+- **Schema Versioning**: Automated database schema management
+- **Data Migration**: Structured data insertion and updates
+- **Environment-Specific**: Different configurations for local and production
+
+### Available Commands
 ```bash
-# Run all tests
-./gradlew test
+# Update database schema
+./gradlew liquibaseUpdateH2
 
-# Run tests with coverage report
-./gradlew test jacocoTestReport
+# Check database status
+./gradlew liquibaseStatusH2
 
-# Run specific test class
-./gradlew test --tests "TournamentServiceImplTest"
+# Validate changelog
+./gradlew liquibaseValidateH2
 ```
 
-### Test Structure
-```
-src/test/java/com/tabletennis/
-├── controller/
-│   └── TournamentControllerTest.java
-├── service/
-│   ├── TournamentServiceImplTest.java
-│   └── RegistrationServiceImplTest.java
-├── entity/
-│   ├── TournamentTest.java
-│   └── TournamentRegistrationTest.java
-└── TableTennisApplicationIntegrationTest.java
-```
+## 🎮 Game Management
+
+### Tournament Flow
+1. **Create Tournament**: Admin creates tournament with details
+2. **Player Registration**: Players register through the public form
+3. **Start Tournament**: Admin initiates round-robin game generation
+4. **Game Management**: Track games and record scores
+5. **Monitor Progress**: View completion statistics and results
+
+### Round-Robin Algorithm
+- Automatically generates games for all player combinations
+- Each player plays every other player exactly once
+- Games are ordered systematically for fair play
+- Supports tournaments with 2+ players
 
 ## 🔧 Configuration
 
 ### Application Properties
-```properties
-# Database Configuration
-spring.datasource.url=jdbc:h2:file:./data/tabletennis
-spring.datasource.username=sa
-spring.datasource.password=
+- **Local Development**: Uses H2 database on port 8080
+- **Docker Deployment**: Uses PostgreSQL on port 10000
+- **Environment-Specific**: Separate configuration files for different deployments
 
-# JPA Configuration
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
+### Environment Variables
+- Database connection strings configurable via properties files
+- Support for both H2 and PostgreSQL databases
+- Flexible port configuration for different deployment scenarios
 
-# H2 Console
-spring.h2.console.enabled=true
+## 🧪 Testing
+
+### Test Coverage
+- **Unit Tests**: Service layer and business logic testing
+- **Integration Tests**: Controller and repository testing
+- **Security Tests**: Authentication and authorization testing
+- **Database Tests**: Data persistence and retrieval testing
+
+### Running Tests
+```bash
+./gradlew test
 ```
 
-### Build Configuration
-- **Java Version**: 17
-- **Spring Boot Version**: 3.1.0
-- **Build Tool**: Gradle
-- **Database**: H2 (file-based)
+## 📊 Monitoring and Logging
+
+### Logging
+- **SLF4J Integration**: Comprehensive logging throughout the application
+- **Structured Logging**: Parameterized log messages for better performance
+- **Error Tracking**: Detailed error logging for debugging
+
+### Statistics
+- **Tournament Counts**: Active tournaments and registration statistics
+- **Player Tracking**: Registration counts and participation metrics
+- **Game Progress**: Tournament completion tracking
 
 ## 🚀 Deployment
 
-### Development
-```bash
-./gradlew bootRun
-```
+### Local Development
+- H2 file-based database for persistence
+- Port 8080 for local access
+- Auto-configuration for development environment
 
-### Production Build
-```bash
-./gradlew build
-java -jar build/libs/table-tennis-1.0-SNAPSHOT.jar
-```
-
-### Environment Variables
-```bash
-# Optional: Override database location
-export SPRING_DATASOURCE_URL=jdbc:h2:file:/path/to/database
-
-# Optional: Override server port
-export SERVER_PORT=8080
-```
+### Production Deployment
+- PostgreSQL database support
+- Docker containerization
+- Port 10000 for production access
+- Environment-specific configurations
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+### Development Standards
+- **Code Style**: Uses `var` for local variables where appropriate
+- **Stream API**: Functional programming approach for collections
+- **Constructor Injection**: Dependency injection best practices
+- **Service Layer**: Clean separation of concerns
 
-### Development Guidelines
-- Follow Spring Boot best practices
-- Use constructor injection over field injection
-- Write comprehensive tests for new features
-- Follow the existing code style and naming conventions
-- Update documentation for new features
+### Code Quality
+- **Lombok Integration**: Reduces boilerplate code
+- **Validation**: Comprehensive input validation
+- **Error Handling**: Graceful error handling and user feedback
+- **Documentation**: Javadoc comments for all public methods
 
-## 📝 License
+## 📝 API Documentation
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+### Registration Endpoints
+- `POST /register`: Submit tournament registration (JSON)
+- `GET /registrations`: View all registrations (Admin only)
 
-## 🙏 Acknowledgments
+### Tournament Endpoints
+- `GET /tournaments`: List all tournaments (Admin only)
+- `POST /tournaments/create`: Create new tournament (Admin only)
+- `POST /tournaments/edit/{id}`: Update tournament (Admin only)
+- `POST /tournaments/delete/{id}`: Delete tournament (Admin only)
 
-- Spring Boot team for the excellent framework
-- H2 Database for the embedded database solution
-- Thymeleaf for the templating engine
-- The table tennis community for inspiration
+### Game Management Endpoints
+- `POST /admin/tournaments/{id}/start`: Start tournament and generate games
+- `GET /admin/tournaments/{id}/games`: View tournament games
+- `POST /admin/games/{gameId}/result`: Update game score
 
 ## 📞 Support
 
-If you encounter any issues or have questions:
-1. Check the existing issues in the repository
-2. Create a new issue with detailed description
-3. Include steps to reproduce any bugs
-4. Provide system information (Java version, OS, etc.)
+For issues or questions, please refer to the application logs or contact the development team.
 
----
+## 🏆 License
 
-**Happy Playing! 🏓**
+This project is proprietary software developed for internal use.
