@@ -1,10 +1,12 @@
 package com.tabletennis.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+/**
+ * Entity representing a player's registration for a tournament
+ * This is a join table between Player and Tournament
+ */
 @Entity
 @Table(name = "tournament_registrations")
 public class TournamentRegistration {
@@ -13,18 +15,10 @@ public class TournamentRegistration {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "First name is required")
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
-
-    @NotBlank(message = "Surname is required")
-    @Column(name = "surname", nullable = false)
-    private String surname;
-
-    @NotBlank(message = "Email is required")
-    @Email(message = "Please enter a valid email address")
-    @Column(name = "email", nullable = false)
-    private String email;
+    @NotNull(message = "Player is required")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "player_id", nullable = false)
+    private Player player;
 
     @NotNull(message = "Tournament selection is required")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,10 +28,8 @@ public class TournamentRegistration {
     // Constructors
     public TournamentRegistration() {}
 
-    public TournamentRegistration(String firstName, String surname, String email, Tournament tournament) {
-        this.firstName = firstName;
-        this.surname = surname;
-        this.email = email;
+    public TournamentRegistration(Player player, Tournament tournament) {
+        this.player = player;
         this.tournament = tournament;
     }
 
@@ -50,28 +42,12 @@ public class TournamentRegistration {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public Player getPlayer() {
+        return player;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     public Tournament getTournament() {
@@ -80,5 +56,31 @@ public class TournamentRegistration {
 
     public void setTournament(Tournament tournament) {
         this.tournament = tournament;
+    }
+
+    // Convenience methods for backward compatibility
+    public String getFirstName() {
+        return player != null ? player.getFirstName() : null;
+    }
+
+    public String getSurname() {
+        return player != null ? player.getSurname() : null;
+    }
+
+    public String getEmail() {
+        return player != null ? player.getEmail() : null;
+    }
+
+    public String getFullName() {
+        return player != null ? player.getFullName() : null;
+    }
+
+    @Override
+    public String toString() {
+        return "TournamentRegistration{" +
+                "id=" + id +
+                ", player=" + (player != null ? player.getFullName() : "null") +
+                ", tournament=" + (tournament != null ? tournament.getName() : "null") +
+                '}';
     }
 }

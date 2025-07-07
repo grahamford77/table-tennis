@@ -1,5 +1,6 @@
 package com.tabletennis.service;
 
+import com.tabletennis.entity.Tournament;
 import com.tabletennis.entity.TournamentRegistration;
 import com.tabletennis.repository.TournamentRegistrationRepository;
 import org.springframework.stereotype.Service;
@@ -34,5 +35,15 @@ public class RegistrationServiceImpl implements RegistrationService {
                 r -> r.getTournament().getName(),
                 Collectors.counting()
             ));
+    }
+
+    @Override
+    public List<TournamentRegistration> findByTournament(Tournament tournament) {
+        return registrationRepository.findByTournament(tournament);
+    }
+
+    @Override
+    public List<TournamentRegistration> findByTournamentId(Long tournamentId) {
+        return registrationRepository.findByTournamentId(tournamentId);
     }
 }

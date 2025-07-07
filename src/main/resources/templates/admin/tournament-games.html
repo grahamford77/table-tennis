@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'Tournament Games - ' + ${tournament.name} + ' - Rightmove Table Tennis Portal'">Tournament Games - Rightmove Table Tennis Portal</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div class="wide-container">
+        <div class="header">
+            <h1>Rightmove Table Tennis Portal</h1>
+            <div class="header-subtitle" th:text="'Tournament Games - ' + ${tournament.name}">Tournament Games</div>
+            <!-- Add user info and logout -->
+            <div class="user-info">
+                <span>Welcome, <strong th:text="${username}">Admin</strong></span>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Tournament Information -->
+            <div class="tournament-info-section">
+                <h2 th:text="${tournament.name}">Tournament Name</h2>
+                <div class="tournament-details">
+                    <p><strong>Date:</strong> <span th:text="${#temporals.format(tournament.date, 'dd MMMM yyyy')}">Date</span></p>
+                    <p><strong>Time:</strong> <span th:text="${tournament.time}">Time</span></p>
+                    <p><strong>Location:</strong> <span th:text="${tournament.location}">Location</span></p>
+                    <p><strong>Description:</strong> <span th:text="${tournament.description}">Description</span></p>
+                </div>
+            </div>
+
+            <!-- Tournament Progress -->
+            <div class="tournament-progress">
+                <h3>Tournament Progress</h3>
+                <div class="progress-stats">
+                    <div class="stat-box">
+                        <div class="stat-number" th:text="${#lists.size(registrations)}">0</div>
+                        <div class="stat-label">Players</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" th:text="${totalGames}">0</div>
+                        <div class="stat-label">Total Games</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" th:text="${completedGames}">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" th:text="${totalGames - completedGames}">0</div>
+                        <div class="stat-label">Remaining</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registered Players -->
+            <div class="registered-players">
+                <h3>Registered Players</h3>
+                <div class="players-grid">
+                    <div th:each="registration : ${registrations}" class="player-card">
+                        <div class="player-name" th:text="${registration.fullName}">Player Name</div>
+                        <div class="player-email" th:text="${registration.email}">player@example.com</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Games Schedule -->
+            <div class="games-section">
+                <h3>Games Schedule (Round Robin)</h3>
+                <div class="games-grid">
+                    <div th:each="game : ${games}" class="game-card" th:classappend="${game.status.toString().toLowerCase()}">
+                        <div class="game-header">
+                            <span class="game-number">Game #<span th:text="${game.gameOrder}">1</span></span>
+                            <span class="game-status" th:text="${game.status}" th:classappend="${game.status.toString().toLowerCase()}">SCHEDULED</span>
+                        </div>
+                        <div class="game-matchup">
+                            <div class="player player1">
+                                <span class="player-name" th:text="${game.player1Name}">Player 1</span>
+                                <span class="player-score" th:if="${game.player1Score != null}" th:text="${game.player1Score}">0</span>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="player player2">
+                                <span class="player-name" th:text="${game.player2Name}">Player 2</span>
+                                <span class="player-score" th:if="${game.player2Score != null}" th:text="${game.player2Score}">0</span>
+                            </div>
+                        </div>
+                        <div class="game-footer" th:if="${game.status == T(com.tabletennis.entity.Game.GameStatus).COMPLETED}">
+                            <span class="game-winner" th:if="${game.player1Score > game.player2Score}">
+                                🏆 Winner: <span th:text="${game.player1Name}">Player 1</span>
+                            </span>
+                            <span class="game-winner" th:if="${game.player2Score > game.player1Score}">
+                                🏆 Winner: <span th:text="${game.player2Name}">Player 2</span>
+                            </span>
+                            <span class="game-winner" th:if="${game.player1Score == game.player2Score}">
+                                🤝 Draw
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="/admin" class="btn btn-primary">← Back to Admin Dashboard</a>
+                <a th:href="@{/tournaments/{id}(id=${tournament.id})}" class="btn btn-secondary">View Tournament Details</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

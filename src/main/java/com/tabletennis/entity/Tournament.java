@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Tournament entity representing a table tennis tournament
@@ -43,6 +45,10 @@ public class Tournament {
     @Column(nullable = false)
     @Positive(message = "Maximum entrants must be a positive number")
     private Integer maxEntrants;
+
+    // Add the relationship to registrations
+    @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TournamentRegistration> registrations = new ArrayList<>();
 
     // Constructors
     public Tournament() {}
@@ -111,6 +117,14 @@ public class Tournament {
 
     public void setMaxEntrants(Integer maxEntrants) {
         this.maxEntrants = maxEntrants;
+    }
+
+    public List<TournamentRegistration> getRegistrations() {
+        return registrations;
+    }
+
+    public void setRegistrations(List<TournamentRegistration> registrations) {
+        this.registrations = registrations;
     }
 
     /**

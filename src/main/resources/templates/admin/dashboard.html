@@ -49,14 +49,40 @@
             </div>
 
             <!-- Tournament Breakdown -->
-            <div th:if="${not #maps.isEmpty(tournamentCounts)}" class="tournament-breakdown">
-                <h3>Tournament Registration Breakdown</h3>
+            <div th:if="${not #lists.isEmpty(tournaments)}" class="tournament-breakdown">
+                <h3>Tournament Management</h3>
                 <div class="breakdown-grid">
-                    <div th:each="tournament : ${tournamentCounts}" class="breakdown-item">
-                        <span class="tournament-name" th:text="${tournament.key}">Tournament Name</span>
-                        <span class="registration-count" th:text="${tournament.value} + ' registrations'">0 registrations</span>
+                    <div th:each="tournament : ${tournaments}" class="breakdown-item tournament-management-item">
+                        <div class="tournament-info">
+                            <span class="tournament-name" th:text="${tournament.name}">Tournament Name</span>
+                            <span class="tournament-date" th:text="${#temporals.format(tournament.date, 'dd MMM yyyy')}">Date</span>
+                            <span class="registration-count" th:text="${#lists.size(tournament.registrations)} + ' registrations'">0 registrations</span>
+                        </div>
+                        <div class="tournament-actions">
+                            <div th:if="${not gameService.isTournamentStarted(tournament)}">
+                                <form th:action="@{/admin/tournaments/{id}/start(id=${tournament.id})}" method="post" style="display: inline;">
+                                    <button type="submit" class="btn btn-primary start-tournament-btn"
+                                            th:disabled="${#lists.size(tournament.registrations) < 2}"
+                                            th:title="${#lists.size(tournament.registrations) < 2 ? 'Need at least 2 players to start' : 'Start round-robin tournament'}">
+                                        🏁 Start Tournament
+                                    </button>
+                                </form>
+                            </div>
+                            <div th:if="${gameService.isTournamentStarted(tournament)}">
+                                <a th:href="@{/admin/tournaments/{id}/games(id=${tournament.id})}" class="btn btn-secondary">
+                                    📊 View Games
+                                </a>
+                                <span class="tournament-status">Tournament Started</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Show message if no tournaments -->
+            <div th:if="${#lists.isEmpty(tournaments)}" class="no-tournaments">
+                <h3>No tournaments available</h3>
+                <p>Create your first tournament to get started!</p>
             </div>
 
             <!-- Admin Actions -->

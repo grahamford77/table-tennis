@@ -1,8 +1,10 @@
 package com.tabletennis.controller;
 
 import com.tabletennis.dto.RegistrationRequest;
+import com.tabletennis.entity.Player;
 import com.tabletennis.entity.Tournament;
 import com.tabletennis.entity.TournamentRegistration;
+import com.tabletennis.service.PlayerService;
 import com.tabletennis.service.RegistrationService;
 import com.tabletennis.service.TournamentService;
 import jakarta.validation.Valid;
@@ -23,10 +25,12 @@ public class RegistrationController {
 
     private final RegistrationService registrationService;
     private final TournamentService tournamentService;
+    private final PlayerService playerService;
 
-    public RegistrationController(RegistrationService registrationService, TournamentService tournamentService) {
+    public RegistrationController(RegistrationService registrationService, TournamentService tournamentService, PlayerService playerService) {
         this.registrationService = registrationService;
         this.tournamentService = tournamentService;
+        this.playerService = playerService;
     }
 
     @GetMapping("/")
@@ -43,12 +47,15 @@ public class RegistrationController {
             Tournament tournament = tournamentService.findById(registrationRequest.getTournamentId())
                 .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
 
+            // Find or create the player
+            Player player = playerService.findOrCreatePlayer(
+                registrationRequest.getFirstName(),
+                registrationRequest.getSurname(),
+                registrationRequest.getEmail()
+            );
+
             // Create registration entity
-            TournamentRegistration registration = new TournamentRegistration();
-            registration.setFirstName(registrationRequest.getFirstName());
-            registration.setSurname(registrationRequest.getSurname());
-            registration.setEmail(registrationRequest.getEmail());
-            registration.setTournament(tournament);
+            TournamentRegistration registration = new TournamentRegistration(player, tournament);
 
             registrationService.save(registration);
             return ResponseEntity.ok().body("{\"success\": true, \"message\": \"Registration successful\"}");
