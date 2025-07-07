@@ -95,7 +95,7 @@
                         </div>
 
                         <!-- Score Entry Form for Scheduled Games -->
-                        <div th:if="${game.status == T(com.tabletennis.entity.Game.GameStatus).SCHEDULED}" class="score-entry">
+                        <div th:if="${game.status == 'SCHEDULED'}" class="score-entry">
                             <h4>Enter Result</h4>
                             <form th:action="@{/admin/games/{gameId}/result(gameId=${game.id})}" method="post" class="score-form">
                                 <div class="score-inputs">
@@ -114,7 +114,7 @@
                         </div>
 
                         <!-- Game Result for Completed Games -->
-                        <div th:if="${game.status == T(com.tabletennis.entity.Game.GameStatus).COMPLETED}" class="game-footer">
+                        <div th:if="${game.status == 'COMPLETED'}" class="game-footer">
                             <span class="game-winner" th:if="${game.player1Score > game.player2Score}">
                                 🏆 Winner: <span th:text="${game.player1Name}">Player 1</span>
                             </span>
