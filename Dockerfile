@@ -1,5 +1,5 @@
 # Multi-stage build for Spring Boot application
-FROM gradle:8.1.1-jdk17 AS build
+FROM gradle:8.1.1-jdk21 AS build
 
 # Set working directory
 WORKDIR /app
@@ -15,7 +15,7 @@ COPY src src
 RUN ./gradlew build -x test --no-daemon
 
 # Production stage
-FROM openjdk:17-jdk-slim
+FROM openjdk:21-jdk-slim
 
 # Set working directory
 WORKDIR /app
