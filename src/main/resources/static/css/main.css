@@ -1,4 +1,4 @@
-/* Main styles for Rightmove Table Tennis Portal */
+/* Main styles for Rightmove Table Tennis Portal - Fun & Sporty Edition */
 
 /* Reset and base styles */
 * {
@@ -9,9 +9,12 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); /* light greys */
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     min-height: 100vh;
     padding: 20px;
+    /* Add a subtle table tennis pattern background */
+    background-image: url('https://www.transparenttextures.com/patterns/hexellence.png');
+    background-blend-mode: lighten;
 }
 
 .container {
@@ -26,254 +29,39 @@ body {
 
 /* Header styles */
 .header {
-    background: linear-gradient(135deg, #00DEB6 0%, #00bfa3 100%); /* Rightmove teal */
+    background: linear-gradient(135deg, #00DEB6 0%, #00bfa3 100%);
     color: white;
-    padding: 40px 30px;
+    padding: 40px 30px 60px 30px;
     border-radius: 15px;
     margin-bottom: 30px;
     text-align: center;
     box-shadow: 0 8px 30px rgba(0, 222, 182, 0.15);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 
-.header::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 10px,
-        rgba(255, 255, 255, 0.1) 10px,
-        rgba(255, 255, 255, 0.1) 20px
-    );
-    animation: movePattern 20s linear infinite;
-    z-index: 1;
-}
-
-@keyframes movePattern {
-    0% { transform: translateX(-50px) translateY(-50px); }
-    100% { transform: translateX(0px) translateY(0px); }
-}
-
-.header h1 {
-    font-size: 2.8em;
-    font-weight: 700;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    position: relative;
-    z-index: 2;
-}
-
-.header-subtitle {
-    font-size: 1.1em;
-    margin-top: 10px;
-    opacity: 0.9;
-    position: relative;
-    z-index: 2;
-}
-
-/* Content container */
-.content {
-    background: white;
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    position: relative;
-}
-
-/* Sports imagery - Using real table tennis paddle image */
-.sports-imagery {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 30px 0;
-    gap: 40px;
-    perspective: 1000px;
-}
-
-.paddle {
-    width: 120px;
-    height: 120px;
-    background-image: url('https://banner2.cleanpng.com/20180802/ivi/kisspng-clip-art-ping-pong-paddles-sets-image-openclipar-pigpng-pinsterest-pictures-to-pin-on-pinterest-p-5b6316323bd4a7.7212826615332204022451.jpg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    position: relative;
-    transition: transform 0.3s ease;
-    filter: drop-shadow(0 8px 25px rgba(0, 0, 0, 0.3));
-}
-
-.paddle:hover {
-    transform: scale(1.1) rotate(5deg);
-    filter: drop-shadow(0 12px 35px rgba(0, 0, 0, 0.4));
-}
-
-.paddle:nth-child(1) {
-    transform: rotate(-15deg);
-}
-
-.paddle:nth-child(1):hover {
-    transform: rotate(-10deg) scale(1.1);
-}
-
-.paddle:nth-child(3) {
-    transform: rotate(15deg);
-}
-
-.paddle:nth-child(3):hover {
-    transform: rotate(10deg) scale(1.1);
-}
-
-/* Remove the pseudo-elements that were creating the CSS paddles */
+/* Remove paddle and ball images and their animations */
+.header::after,
+.header .header-ball,
+.sports-imagery,
+.paddle,
+.paddle .handle,
 .paddle::before,
-.paddle::after {
-    display: none;
-}
-
-/* Paddle handle */
-.paddle .handle {
-    position: absolute;
-    bottom: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 35px;
-    background:
-        linear-gradient(180deg, #8b4513 0%, #654321 50%, #4a2c17 100%),
-        repeating-linear-gradient(
-            90deg,
-            transparent 0px,
-            rgba(139, 69, 19, 0.3) 1px,
-            transparent 2px
-        );
-    border-radius: 3px 3px 8px 8px;
-    box-shadow:
-        inset 0 0 10px rgba(0, 0, 0, 0.3),
-        0 5px 15px rgba(0, 0, 0, 0.4);
-    border: 1px solid #3d1a00;
-}
-
-/* Add handle to each paddle */
-.paddle:nth-child(1)::after,
-.paddle:nth-child(3)::after {
-    content: '';
-    position: absolute;
-    bottom: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 35px;
-    background:
-        linear-gradient(180deg, #8b4513 0%, #654321 50%, #4a2c17 100%);
-    border-radius: 3px 3px 8px 8px;
-    box-shadow:
-        inset 0 0 10px rgba(0, 0, 0, 0.3),
-        0 5px 15px rgba(0, 0, 0, 0.4);
-    border: 1px solid #3d1a00;
-    z-index: -1;
-}
-
-/* More realistic table tennis ball */
-.ball {
-    width: 55px;
-    height: 55px;
-    background:
-        radial-gradient(circle at 20% 20%, #ffffff 0%, #fff8dc 30%, #ffa500 100%),
-        linear-gradient(45deg, #ff8c00 0%, #ff7f00 100%);
-    border-radius: 50%;
-    position: relative;
-    box-shadow:
-        0 0 20px rgba(255, 140, 0, 0.6),
-        0 8px 25px rgba(0, 0, 0, 0.3),
-        inset 0 0 30px rgba(255, 255, 255, 0.3);
-    animation: bounce 2s ease-in-out infinite;
-    border: 1px solid #e67e22;
-}
-
-/* Ball seam lines - more realistic */
-.ball::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 10%;
-    right: 10%;
-    height: 1px;
-    background:
-        linear-gradient(90deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.9) 20%,
-            rgba(255, 255, 255, 0.9) 80%,
-            transparent 100%
-        );
-    border-radius: 1px;
-    transform: translateY(-50%);
-    box-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
-}
-
+.paddle::after,
+.ball,
+.ball::before,
 .ball::after {
-    content: '';
-    position: absolute;
-    top: 10%;
-    bottom: 10%;
-    left: 50%;
-    width: 1px;
-    background:
-        linear-gradient(180deg,
-            transparent 0%,
-            rgba(255, 255, 255, 0.9) 20%,
-            rgba(255, 255, 255, 0.9) 80%,
-            transparent 100%
-        );
-    border-radius: 1px;
-    transform: translateX(-50%);
-    box-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+    display: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    animation: none !important;
 }
 
-/* Animation variants */
-.ball.bounce {
-    animation: bounce 2s ease-in-out infinite;
-}
-
-@keyframes bounce {
-    0%, 100% {
-        transform: translateY(0px) rotate(0deg);
-        box-shadow:
-            0 0 20px rgba(255, 140, 0, 0.6),
-            0 8px 25px rgba(0, 0, 0, 0.3),
-            inset 0 0 30px rgba(255, 255, 255, 0.3);
-    }
-    50% {
-        transform: translateY(-25px) rotate(180deg);
-        box-shadow:
-            0 0 25px rgba(255, 140, 0, 0.8),
-            0 15px 35px rgba(0, 0, 0, 0.4),
-            inset 0 0 35px rgba(255, 255, 255, 0.4);
-    }
-}
-
-.ball.pulse {
-    animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-}
-
-.paddle.wiggle {
-    animation: wiggle 3s ease-in-out infinite;
-}
-
-@keyframes wiggle {
-    0%, 100% { transform: rotate(-15deg) scale(1); }
-    25% { transform: rotate(-20deg) scale(1.02); }
-    50% { transform: rotate(-10deg) scale(1.05); }
-    75% { transform: rotate(-17deg) scale(1.02); }
-}
+@keyframes paddle-bounce {}
+@keyframes header-ball-bounce {}
+@keyframes bounce {}
+@keyframes pulse {}
+@keyframes wiggle {}
 
 /* Typography */
 h2 {
