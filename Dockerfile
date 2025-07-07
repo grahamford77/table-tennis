@@ -39,5 +39,5 @@ EXPOSE 10000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
   CMD curl -f http://localhost:10000/actuator/health || exit 1
 
-# Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Run the application with Docker profile
+ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "app.jar"]

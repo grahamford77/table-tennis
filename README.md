@@ -1,4 +1,4 @@
-# Graham's Table Tennis Tournament Registration System
+# Rightmove Table Tennis Portal Registration System
 
 A comprehensive Spring Boot web application for managing table tennis tournament registrations with a professional teal and white design.
 
