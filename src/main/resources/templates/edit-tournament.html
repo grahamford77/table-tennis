@@ -81,60 +81,6 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('editTournamentForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            // Clear previous errors
-            document.querySelectorAll('.error').forEach(el => el.textContent = '');
-            document.getElementById('message').style.display = 'none';
-
-            const tournamentId = document.getElementById('tournamentId').value;
-
-            // Get form data
-            const formData = {
-                name: document.getElementById('name').value,
-                description: document.getElementById('description').value,
-                date: document.getElementById('date').value,
-                time: document.getElementById('time').value,
-                location: document.getElementById('location').value,
-                maxEntrants: parseInt(document.getElementById('maxEntrants').value)
-            };
-
-            try {
-                const response = await fetch(`/tournaments/edit/${tournamentId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                const result = await response.json();
-
-                if (response.ok && result.success) {
-                    // Show success message and redirect
-                    document.getElementById('message').textContent = result.message;
-                    document.getElementById('message').className = 'message success';
-                    document.getElementById('message').style.display = 'block';
-
-                    // Redirect to tournaments page after a short delay
-                    setTimeout(() => {
-                        window.location.href = '/tournaments';
-                    }, 1500);
-                } else {
-                    // Show error message
-                    document.getElementById('message').textContent = result.message || 'Failed to update tournament';
-                    document.getElementById('message').className = 'message error';
-                    document.getElementById('message').style.display = 'block';
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('message').textContent = 'An error occurred. Please try again.';
-                document.getElementById('message').className = 'message error';
-                document.getElementById('message').style.display = 'block';
-            }
-        });
-    </script>
+    <script src="/js/app.js"></script>
 </body>
 </html>
