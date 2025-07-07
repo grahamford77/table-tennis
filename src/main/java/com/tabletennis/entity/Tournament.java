@@ -1,10 +1,20 @@
 package com.tabletennis.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,6 +26,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = "tournaments")
+@Data
+@NoArgsConstructor
 public class Tournament {
 
     @Id
@@ -50,9 +62,6 @@ public class Tournament {
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TournamentRegistration> registrations = new ArrayList<>();
 
-    // Constructors
-    public Tournament() {}
-
     public Tournament(String name, String description, LocalDate date, LocalTime time, String location, Integer maxEntrants) {
         this.name = name;
         this.description = description;
@@ -60,79 +69,5 @@ public class Tournament {
         this.time = time;
         this.location = location;
         this.maxEntrants = maxEntrants;
-    }
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public LocalTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalTime time) {
-        this.time = time;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public Integer getMaxEntrants() {
-        return maxEntrants;
-    }
-
-    public void setMaxEntrants(Integer maxEntrants) {
-        this.maxEntrants = maxEntrants;
-    }
-
-    public List<TournamentRegistration> getRegistrations() {
-        return registrations;
-    }
-
-    public void setRegistrations(List<TournamentRegistration> registrations) {
-        this.registrations = registrations;
-    }
-
-    /**
-     * Get display name for tournament dropdown showing date and name
-     */
-    public String getDisplayName() {
-        return String.format("%s - %s",
-            date.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy")),
-            name);
     }
 }

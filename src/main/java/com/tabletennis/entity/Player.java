@@ -1,8 +1,18 @@
 package com.tabletennis.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +22,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = "players")
+@Data
+@NoArgsConstructor
 public class Player {
 
     @Id
@@ -35,68 +47,14 @@ public class Player {
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TournamentRegistration> tournamentRegistrations = new ArrayList<>();
 
-    // Constructors
-    public Player() {}
-
     public Player(String firstName, String surname, String email) {
         this.firstName = firstName;
         this.surname = surname;
         this.email = email;
     }
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public List<TournamentRegistration> getTournamentRegistrations() {
-        return tournamentRegistrations;
-    }
-
-    public void setTournamentRegistrations(List<TournamentRegistration> tournamentRegistrations) {
-        this.tournamentRegistrations = tournamentRegistrations;
-    }
-
     // Convenience method for getting full name
     public String getFullName() {
         return firstName + " " + surname;
-    }
-
-    @Override
-    public String toString() {
-        return "Player{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", surname='" + surname + '\'' +
-                ", email='" + email + '\'' +
-                '}';
     }
 }

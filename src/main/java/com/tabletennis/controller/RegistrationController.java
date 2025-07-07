@@ -8,6 +8,8 @@ import com.tabletennis.service.PlayerService;
 import com.tabletennis.service.RegistrationService;
 import com.tabletennis.service.TournamentService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,17 +23,17 @@ import java.util.List;
  * Controller for handling tournament registrations
  */
 @Controller
+@RequiredArgsConstructor
+@Slf4j
 public class RegistrationController {
+
+    private static final String JSON_SUCCESS_TRUE = "{\"success\": true, \"message\": \"Registration successful\"}";
+    private static final String JSON_SUCCESS_FALSE_PREFIX = "{\"success\": false, \"message\": \"";
+    private static final String JSON_SUFFIX = "\"}";
 
     private final RegistrationService registrationService;
     private final TournamentService tournamentService;
     private final PlayerService playerService;
-
-    public RegistrationController(RegistrationService registrationService, TournamentService tournamentService, PlayerService playerService) {
-        this.registrationService = registrationService;
-        this.tournamentService = tournamentService;
-        this.playerService = playerService;
-    }
 
     @GetMapping("/")
     public String showRegistrationForm(Model model) {
@@ -41,7 +43,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> processRegistration(@Valid @RequestBody RegistrationRequest registrationRequest) {
+    public ResponseEntity<String> processRegistration(@Valid @RequestBody RegistrationRequest registrationRequest) {
         try {
             // Find the tournament
             Tournament tournament = tournamentService.findById(registrationRequest.getTournamentId())
@@ -58,9 +60,9 @@ public class RegistrationController {
             TournamentRegistration registration = new TournamentRegistration(player, tournament);
 
             registrationService.save(registration);
-            return ResponseEntity.ok().body("{\"success\": true, \"message\": \"Registration successful\"}");
+            return ResponseEntity.ok().body(JSON_SUCCESS_TRUE);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("{\"success\": false, \"message\": \"" + e.getMessage() + "\"}");
+            return ResponseEntity.badRequest().body(JSON_SUCCESS_FALSE_PREFIX + e.getMessage() + JSON_SUFFIX);
         }
     }
 

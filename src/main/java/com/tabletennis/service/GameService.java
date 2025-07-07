@@ -5,6 +5,8 @@ import com.tabletennis.entity.Player;
 import com.tabletennis.entity.Tournament;
 import com.tabletennis.entity.TournamentRegistration;
 import com.tabletennis.repository.GameRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,15 +16,12 @@ import java.util.List;
  * Service for managing tournament games
  */
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class GameService {
 
     private final GameRepository gameRepository;
     private final RegistrationService registrationService;
-
-    public GameService(GameRepository gameRepository, RegistrationService registrationService) {
-        this.gameRepository = gameRepository;
-        this.registrationService = registrationService;
-    }
 
     /**
      * Create round-robin games for a tournament
@@ -69,24 +68,10 @@ public class GameService {
     }
 
     /**
-     * Get all games for a tournament by ID
-     */
-    public List<Game> getGamesForTournament(Long tournamentId) {
-        return gameRepository.findByTournamentIdOrderByGameOrderAsc(tournamentId);
-    }
-
-    /**
      * Check if tournament has been started (has games)
      */
     public boolean isTournamentStarted(Tournament tournament) {
         return gameRepository.existsByTournament(tournament);
-    }
-
-    /**
-     * Get total number of games for a tournament
-     */
-    public long getGameCount(Tournament tournament) {
-        return gameRepository.countByTournament(tournament);
     }
 
     /**

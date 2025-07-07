@@ -2,6 +2,8 @@ package com.tabletennis.service;
 
 import com.tabletennis.entity.Tournament;
 import com.tabletennis.repository.TournamentRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -12,13 +14,11 @@ import java.util.Optional;
  * Implementation of TournamentService
  */
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class TournamentServiceImpl implements TournamentService {
 
     private final TournamentRepository tournamentRepository;
-
-    public TournamentServiceImpl(TournamentRepository tournamentRepository) {
-        this.tournamentRepository = tournamentRepository;
-    }
 
     @Override
     public List<Tournament> findAllOrderByDate() {

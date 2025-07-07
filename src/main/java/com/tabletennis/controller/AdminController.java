@@ -5,10 +5,16 @@ import com.tabletennis.entity.Tournament;
 import com.tabletennis.service.GameService;
 import com.tabletennis.service.RegistrationService;
 import com.tabletennis.service.TournamentService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -20,17 +26,18 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/admin")
+@RequiredArgsConstructor
+@Slf4j
 public class AdminController {
+
+    private static final String ERROR_ATTRIBUTE = "error";
+    private static final String SUCCESS_ATTRIBUTE = "success";
+    private static final String REDIRECT_ADMIN = "redirect:/admin";
+    private static final String TOURNAMENT_NOT_FOUND = "Tournament not found";
 
     private final RegistrationService registrationService;
     private final TournamentService tournamentService;
     private final GameService gameService;
-
-    public AdminController(RegistrationService registrationService, TournamentService tournamentService, GameService gameService) {
-        this.registrationService = registrationService;
-        this.tournamentService = tournamentService;
-        this.gameService = gameService;
-    }
 
     @GetMapping
     public String showAdminDashboard(Model model, Authentication authentication) {
@@ -64,18 +71,18 @@ public class AdminController {
             Tournament tournament = tournamentService.findById(id)
                 .orElse(null);
             if (tournament == null) {
-                redirectAttributes.addFlashAttribute("error", "Tournament not found");
-                return "redirect:/admin";
+                redirectAttributes.addFlashAttribute(ERROR_ATTRIBUTE, TOURNAMENT_NOT_FOUND);
+                return REDIRECT_ADMIN;
             }
 
             List<Game> games = gameService.startTournament(tournament);
-            redirectAttributes.addFlashAttribute("success",
+            redirectAttributes.addFlashAttribute(SUCCESS_ATTRIBUTE,
                 "Tournament started successfully! " + games.size() + " games created.");
 
             return "redirect:/admin/tournaments/" + id + "/games";
         } catch (IllegalStateException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/admin";
+            redirectAttributes.addFlashAttribute(ERROR_ATTRIBUTE, e.getMessage());
+            return REDIRECT_ADMIN;
         }
     }
 
@@ -84,8 +91,8 @@ public class AdminController {
         Tournament tournament = tournamentService.findById(id)
             .orElse(null);
         if (tournament == null) {
-            model.addAttribute("error", "Tournament not found");
-            return "redirect:/admin";
+            model.addAttribute(ERROR_ATTRIBUTE, TOURNAMENT_NOT_FOUND);
+            return REDIRECT_ADMIN;
         }
 
         List<Game> games = gameService.getGamesForTournament(tournament);
@@ -115,14 +122,21 @@ public class AdminController {
             Game updatedGame = gameService.updateGameScore(gameId, player1Score, player2Score);
             Tournament tournament = updatedGame.getTournament();
 
-            redirectAttributes.addFlashAttribute("success",
-                "Game result updated: " + updatedGame.getPlayer1Name() + " " + player1Score +
-                " - " + player2Score + " " + updatedGame.getPlayer2Name());
+            String message = "Game result updated: "
+                    + updatedGame.getPlayer1Name()
+                    + " "
+                    + player1Score
+                    + " - "
+                    + player2Score
+                    + " "
+                    + updatedGame.getPlayer2Name();
+
+            redirectAttributes.addFlashAttribute(SUCCESS_ATTRIBUTE, message);
 
             return "redirect:/admin/tournaments/" + tournament.getId() + "/games";
         } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/admin";
+            redirectAttributes.addFlashAttribute(ERROR_ATTRIBUTE, e.getMessage());
+            return REDIRECT_ADMIN;
         }
     }
 }

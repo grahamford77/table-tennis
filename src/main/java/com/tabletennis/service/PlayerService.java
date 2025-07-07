@@ -2,6 +2,8 @@ package com.tabletennis.service;
 
 import com.tabletennis.entity.Player;
 import com.tabletennis.repository.PlayerRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,26 +13,17 @@ import java.util.Optional;
  * Service for managing players
  */
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class PlayerService {
 
     private final PlayerRepository playerRepository;
-
-    public PlayerService(PlayerRepository playerRepository) {
-        this.playerRepository = playerRepository;
-    }
 
     /**
      * Find all players
      */
     public List<Player> findAll() {
         return playerRepository.findAll();
-    }
-
-    /**
-     * Find player by ID
-     */
-    public Optional<Player> findById(Long id) {
-        return playerRepository.findById(id);
     }
 
     /**
@@ -71,17 +64,4 @@ public class PlayerService {
         }
     }
 
-    /**
-     * Check if player exists by email
-     */
-    public boolean existsByEmail(String email) {
-        return playerRepository.existsByEmail(email);
-    }
-
-    /**
-     * Delete player by ID
-     */
-    public void deleteById(Long id) {
-        playerRepository.deleteById(id);
-    }
 }

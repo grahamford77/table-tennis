@@ -2,7 +2,8 @@ package com.tabletennis.config;
 
 import com.tabletennis.entity.User;
 import com.tabletennis.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -13,17 +14,14 @@ import java.util.Random;
  * Data initialization component to create default admin user on startup
  */
 @Component
+@RequiredArgsConstructor
+@Slf4j
 public class DataInitializer implements CommandLineRunner {
 
     private final UserService userService;
 
-    @Autowired
-    public DataInitializer(UserService userService) {
-        this.userService = userService;
-    }
-
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         // Check if admin user already exists
         if (userService.findByUsername("admin").isEmpty()) {
             // Generate a secure random password
@@ -33,17 +31,17 @@ public class DataInitializer implements CommandLineRunner {
             userService.createUser("admin", randomPassword, User.Role.ADMIN);
 
             // Display the password for the admin to see
-            System.out.println("=====================================");
-            System.out.println("🔑 ADMIN USER CREATED SUCCESSFULLY");
-            System.out.println("=====================================");
-            System.out.println("Username: admin");
-            System.out.println("Password: " + randomPassword);
-            System.out.println("=====================================");
-            System.out.println("⚠️  IMPORTANT: Save this password securely!");
-            System.out.println("   This password will not be shown again.");
-            System.out.println("=====================================");
+            log.warn("=====================================");
+            log.warn("🔑 ADMIN USER CREATED SUCCESSFULLY");
+            log.warn("=====================================");
+            log.warn("Username: admin");
+            log.warn("Password: {}", randomPassword);
+            log.warn("=====================================");
+            log.warn("⚠️  IMPORTANT: Save this password securely!");
+            log.warn("   This password will not be shown again.");
+            log.warn("=====================================");
         } else {
-            System.out.println("ℹ️  Admin user already exists, skipping creation.");
+            log.info("ℹ️  Admin user already exists, skipping creation.");
         }
     }
 

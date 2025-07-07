@@ -6,6 +6,8 @@ import com.tabletennis.entity.TournamentRegistration;
 import com.tabletennis.service.RegistrationService;
 import com.tabletennis.service.TournamentService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,15 +26,19 @@ import java.util.stream.Collectors;
  */
 @Controller
 @RequestMapping("/tournaments")
+@RequiredArgsConstructor
+@Slf4j
 public class TournamentController {
+
+    private static final String JSON_SUCCESS_CREATED = "{\"success\": true, \"message\": \"Tournament created successfully\"}";
+    private static final String JSON_SUCCESS_UPDATED = "{\"success\": true, \"message\": \"Tournament updated successfully\"}";
+    private static final String JSON_SUCCESS_DELETED = "{\"success\": true, \"message\": \"Tournament deleted successfully\"}";
+    private static final String JSON_ERROR_NOT_FOUND = "{\"success\": false, \"message\": \"Tournament not found\"}";
+    private static final String JSON_SUCCESS_FALSE_PREFIX = "{\"success\": false, \"message\": \"";
+    private static final String JSON_SUFFIX = "\"}";
 
     private final RegistrationService registrationService;
     private final TournamentService tournamentService;
-
-    public TournamentController(RegistrationService registrationService, TournamentService tournamentService) {
-        this.registrationService = registrationService;
-        this.tournamentService = tournamentService;
-    }
 
     @GetMapping
     public String showTournaments(Model model) {
@@ -55,7 +61,7 @@ public class TournamentController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createTournament(@Valid @RequestBody TournamentRequest tournamentRequest) {
+    public ResponseEntity<String> createTournament(@Valid @RequestBody TournamentRequest tournamentRequest) {
         try {
             Tournament tournament = new Tournament();
             tournament.setName(tournamentRequest.getName());
@@ -66,9 +72,9 @@ public class TournamentController {
             tournament.setMaxEntrants(tournamentRequest.getMaxEntrants());
 
             tournamentService.save(tournament);
-            return ResponseEntity.ok().body("{\"success\": true, \"message\": \"Tournament created successfully\"}");
+            return ResponseEntity.ok().body(JSON_SUCCESS_CREATED);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("{\"success\": false, \"message\": \"" + e.getMessage() + "\"}");
+            return ResponseEntity.badRequest().body(JSON_SUCCESS_FALSE_PREFIX + e.getMessage() + JSON_SUFFIX);
         }
     }
 
@@ -83,7 +89,7 @@ public class TournamentController {
     }
 
     @PostMapping("/edit/{id}")
-    public ResponseEntity<?> updateTournament(@PathVariable Long id,
+    public ResponseEntity<String> updateTournament(@PathVariable Long id,
                                             @Valid @RequestBody TournamentRequest tournamentRequest) {
         try {
             Tournament tournament = tournamentService.findById(id)
@@ -97,23 +103,23 @@ public class TournamentController {
             tournament.setMaxEntrants(tournamentRequest.getMaxEntrants());
 
             tournamentService.save(tournament);
-            return ResponseEntity.ok().body("{\"success\": true, \"message\": \"Tournament updated successfully\"}");
+            return ResponseEntity.ok().body(JSON_SUCCESS_UPDATED);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("{\"success\": false, \"message\": \"" + e.getMessage() + "\"}");
+            return ResponseEntity.badRequest().body(JSON_SUCCESS_FALSE_PREFIX + e.getMessage() + JSON_SUFFIX);
         }
     }
 
     @PostMapping("/delete/{id}")
-    public ResponseEntity<?> deleteTournament(@PathVariable Long id) {
+    public ResponseEntity<String> deleteTournament(@PathVariable Long id) {
         try {
             if (tournamentService.findById(id).isPresent()) {
                 tournamentService.deleteById(id);
-                return ResponseEntity.ok().body("{\"success\": true, \"message\": \"Tournament deleted successfully\"}");
+                return ResponseEntity.ok().body(JSON_SUCCESS_DELETED);
             } else {
-                return ResponseEntity.badRequest().body("{\"success\": false, \"message\": \"Tournament not found\"}");
+                return ResponseEntity.badRequest().body(JSON_ERROR_NOT_FOUND);
             }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("{\"success\": false, \"message\": \"" + e.getMessage() + "\"}");
+            return ResponseEntity.badRequest().body(JSON_SUCCESS_FALSE_PREFIX + e.getMessage() + JSON_SUFFIX);
         }
     }
 }

@@ -4,7 +4,8 @@ import java.util.Optional;
 
 import com.tabletennis.entity.User;
 import com.tabletennis.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,16 +16,12 @@ import org.springframework.stereotype.Service;
  * Service class for user management and authentication
  */
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     /**
      * Load user by username for Spring Security
@@ -55,7 +52,7 @@ public class UserService implements UserDetailsService {
     /**
      * Create a new user with encrypted password
      */
-    public User createUser(String username, String rawPassword, User.Role role) {
+    public void createUser(String username, String rawPassword, User.Role role) {
         if (userRepository.existsByUsername(username)) {
             throw new IllegalArgumentException("Username already exists: " + username);
         }
@@ -66,6 +63,6 @@ public class UserService implements UserDetailsService {
         user.setRole(role);
         user.setEnabled(true);
 
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 }

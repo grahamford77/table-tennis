@@ -3,6 +3,8 @@ package com.tabletennis.service;
 import com.tabletennis.entity.Tournament;
 import com.tabletennis.entity.TournamentRegistration;
 import com.tabletennis.repository.TournamentRegistrationRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,13 +12,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class RegistrationServiceImpl implements RegistrationService {
 
     private final TournamentRegistrationRepository registrationRepository;
-
-    public RegistrationServiceImpl(TournamentRegistrationRepository registrationRepository) {
-        this.registrationRepository = registrationRepository;
-    }
 
     @Override
     public List<TournamentRegistration> findAll() {
