@@ -1,5 +1,7 @@
 package com.tabletennis.service;
 
+import java.util.Optional;
+
 import com.tabletennis.entity.User;
 import com.tabletennis.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,12 @@ import org.springframework.stereotype.Service;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -39,5 +43,29 @@ public class UserService implements UserDetailsService {
                 .credentialsExpired(false)
                 .disabled(!user.isEnabled())
                 .build();
+    }
+
+    /**
+     * Find user by username
+     */
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    /**
+     * Create a new user with encrypted password
+     */
+    public User createUser(String username, String rawPassword, User.Role role) {
+        if (userRepository.existsByUsername(username)) {
+            throw new IllegalArgumentException("Username already exists: " + username);
+        }
+
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(rawPassword));
+        user.setRole(role);
+        user.setEnabled(true);
+
+        return userRepository.save(user);
     }
 }
