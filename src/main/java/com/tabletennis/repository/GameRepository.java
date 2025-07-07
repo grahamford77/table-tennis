@@ -19,17 +19,8 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     List<Game> findByTournamentOrderByGameOrderAsc(Tournament tournament);
 
     /**
-     * Find all games for a specific tournament ID, ordered by game order
-     */
-    List<Game> findByTournamentIdOrderByGameOrderAsc(Long tournamentId);
-
-    /**
      * Check if games exist for a tournament
      */
     boolean existsByTournament(Tournament tournament);
 
-    /**
-     * Count games for a tournament
-     */
-    long countByTournament(Tournament tournament);
 }

@@ -17,13 +17,4 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
      */
     Optional<Player> findByEmail(String email);
 
-    /**
-     * Check if a player exists with the given email
-     */
-    boolean existsByEmail(String email);
-
-    /**
-     * Find a player by first name and surname
-     */
-    Optional<Player> findByFirstNameAndSurname(String firstName, String surname);
 }

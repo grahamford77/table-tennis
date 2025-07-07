@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -18,13 +17,6 @@ import java.util.Optional;
 public class PlayerService {
 
     private final PlayerRepository playerRepository;
-
-    /**
-     * Find all players
-     */
-    public List<Player> findAll() {
-        return playerRepository.findAll();
-    }
 
     /**
      * Find player by email
@@ -46,11 +38,11 @@ public class PlayerService {
      * Otherwise create new player
      */
     public Player findOrCreatePlayer(String firstName, String surname, String email) {
-        Optional<Player> existingPlayer = findByEmail(email);
+        var existingPlayer = findByEmail(email);
 
         if (existingPlayer.isPresent()) {
             // Update existing player's name if different
-            Player player = existingPlayer.get();
+            var player = existingPlayer.get();
             if (!player.getFirstName().equals(firstName) || !player.getSurname().equals(surname)) {
                 player.setFirstName(firstName);
                 player.setSurname(surname);
@@ -59,7 +51,7 @@ public class PlayerService {
             return player;
         } else {
             // Create new player
-            Player newPlayer = new Player(firstName, surname, email);
+            var newPlayer = new Player(firstName, surname, email);
             return save(newPlayer);
         }
     }

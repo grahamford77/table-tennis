@@ -1,8 +1,9 @@
 package com.tabletennis.controller;
 
+import java.util.stream.Collectors;
+
 import com.tabletennis.dto.TournamentRequest;
 import com.tabletennis.entity.Tournament;
-import com.tabletennis.entity.TournamentRegistration;
 import com.tabletennis.service.RegistrationService;
 import com.tabletennis.service.TournamentService;
 import jakarta.validation.Valid;
@@ -16,10 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Controller for handling tournament management operations
@@ -42,12 +39,12 @@ public class TournamentController {
 
     @GetMapping
     public String showTournaments(Model model) {
-        List<Tournament> tournaments = tournamentService.findAllOrderByDate();
-        List<TournamentRegistration> allRegistrations = registrationService.findAll();
+        var tournaments = tournamentService.findAllOrderByDate();
+        var allRegistrations = registrationService.findAll();
 
         // Create a map of tournament ID to list of registrations
-        Map<Long, List<TournamentRegistration>> tournamentRegistrations = allRegistrations.stream()
-            .collect(Collectors.groupingBy(r -> r.getTournament().getId()));
+        var tournamentRegistrations = allRegistrations.stream()
+                .collect(Collectors.groupingBy(r -> r.getTournament().getId()));
 
         model.addAttribute("tournaments", tournaments);
         model.addAttribute("tournamentRegistrations", tournamentRegistrations);
@@ -63,24 +60,19 @@ public class TournamentController {
     @PostMapping("/create")
     public ResponseEntity<String> createTournament(@Valid @RequestBody TournamentRequest tournamentRequest) {
         try {
-            Tournament tournament = new Tournament();
-            tournament.setName(tournamentRequest.getName());
-            tournament.setDescription(tournamentRequest.getDescription());
-            tournament.setDate(tournamentRequest.getDate());
-            tournament.setTime(tournamentRequest.getTime());
-            tournament.setLocation(tournamentRequest.getLocation());
-            tournament.setMaxEntrants(tournamentRequest.getMaxEntrants());
+            var tournament = new Tournament();
+            setTournamentFields(tournament, tournamentRequest);
 
             tournamentService.save(tournament);
             return ResponseEntity.ok().body(JSON_SUCCESS_CREATED);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(JSON_SUCCESS_FALSE_PREFIX + e.getMessage() + JSON_SUFFIX);
+            return createErrorResponse(e.getMessage());
         }
     }
 
     @GetMapping("/edit/{id}")
     public String showEditTournamentForm(@PathVariable Long id, Model model) {
-        Tournament tournament = tournamentService.findById(id).orElse(null);
+        var tournament = tournamentService.findById(id).orElse(null);
         if (tournament == null) {
             return "redirect:/tournaments";
         }
@@ -90,22 +82,17 @@ public class TournamentController {
 
     @PostMapping("/edit/{id}")
     public ResponseEntity<String> updateTournament(@PathVariable Long id,
-                                            @Valid @RequestBody TournamentRequest tournamentRequest) {
+            @Valid @RequestBody TournamentRequest tournamentRequest) {
         try {
-            Tournament tournament = tournamentService.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
+            var tournament = tournamentService.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
 
-            tournament.setName(tournamentRequest.getName());
-            tournament.setDescription(tournamentRequest.getDescription());
-            tournament.setDate(tournamentRequest.getDate());
-            tournament.setTime(tournamentRequest.getTime());
-            tournament.setLocation(tournamentRequest.getLocation());
-            tournament.setMaxEntrants(tournamentRequest.getMaxEntrants());
+            setTournamentFields(tournament, tournamentRequest);
 
             tournamentService.save(tournament);
             return ResponseEntity.ok().body(JSON_SUCCESS_UPDATED);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(JSON_SUCCESS_FALSE_PREFIX + e.getMessage() + JSON_SUFFIX);
+            return createErrorResponse(e.getMessage());
         }
     }
 
@@ -119,7 +106,32 @@ public class TournamentController {
                 return ResponseEntity.badRequest().body(JSON_ERROR_NOT_FOUND);
             }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(JSON_SUCCESS_FALSE_PREFIX + e.getMessage() + JSON_SUFFIX);
+            return createErrorResponse(e.getMessage());
         }
+    }
+
+    /**
+     * Creates a JSON error response with the given error message
+     *
+     * @param errorMessage the error message to include in the response
+     * @return ResponseEntity with JSON error response
+     */
+    private ResponseEntity<String> createErrorResponse(String errorMessage) {
+        return ResponseEntity.badRequest().body(JSON_SUCCESS_FALSE_PREFIX + errorMessage + JSON_SUFFIX);
+    }
+
+    /**
+     * Sets tournament fields from the tournament request
+     *
+     * @param tournament        the tournament entity to update
+     * @param tournamentRequest the request containing the new field values
+     */
+    private void setTournamentFields(Tournament tournament, TournamentRequest tournamentRequest) {
+        tournament.setName(tournamentRequest.getName());
+        tournament.setDescription(tournamentRequest.getDescription());
+        tournament.setDate(tournamentRequest.getDate());
+        tournament.setTime(tournamentRequest.getTime());
+        tournament.setLocation(tournamentRequest.getLocation());
+        tournament.setMaxEntrants(tournamentRequest.getMaxEntrants());
     }
 }

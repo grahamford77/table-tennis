@@ -41,12 +41,12 @@ public class TournamentServiceImpl implements TournamentService {
      */
     @Override
     public long countActiveTournaments() {
-        LocalDate today = LocalDate.now();
-        LocalDate twoWeeksFromNow = today.plusWeeks(2);
+        var today = LocalDate.now();
+        var twoWeeksFromNow = today.plusWeeks(2);
 
         return tournamentRepository.findAll().stream()
             .filter(tournament -> {
-                LocalDate tournamentDate = tournament.getDate();
+                var tournamentDate = tournament.getDate();
                 return tournamentDate != null &&
                        !tournamentDate.isBefore(today) &&
                        !tournamentDate.isAfter(twoWeeksFromNow);

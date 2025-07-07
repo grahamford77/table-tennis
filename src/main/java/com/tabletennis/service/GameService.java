@@ -1,16 +1,15 @@
 package com.tabletennis.service;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
+
 import com.tabletennis.entity.Game;
-import com.tabletennis.entity.Player;
 import com.tabletennis.entity.Tournament;
-import com.tabletennis.entity.TournamentRegistration;
 import com.tabletennis.repository.GameRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Service for managing tournament games
@@ -34,27 +33,24 @@ public class GameService {
         }
 
         // Get all registered players for the tournament
-        List<TournamentRegistration> registrations = registrationService.findByTournament(tournament);
+        var registrations = registrationService.findByTournament(tournament);
 
         if (registrations.size() < 2) {
             throw new IllegalStateException("Need at least 2 players to start tournament");
         }
 
-        // Create round-robin games
-        List<Game> games = new ArrayList<>();
-        int gameOrder = 1;
+        // Create round-robin games using Stream API
+        var gameOrderCounter = new AtomicInteger(1);
 
-        // Generate all possible combinations of players
-        for (int i = 0; i < registrations.size(); i++) {
-            for (int j = i + 1; j < registrations.size(); j++) {
-                Player player1 = registrations.get(i).getPlayer();
-                Player player2 = registrations.get(j).getPlayer();
-
-                Game game = new Game(tournament, player1, player2, gameOrder++);
-
-                games.add(game);
-            }
-        }
+        var games = IntStream.range(0, registrations.size())
+                .boxed()
+                .flatMap(i -> IntStream.range(i + 1, registrations.size())
+                        .mapToObj(j -> {
+                            var player1 = registrations.get(i).getPlayer();
+                            var player2 = registrations.get(j).getPlayer();
+                            return new Game(tournament, player1, player2, gameOrderCounter.getAndIncrement());
+                        }))
+                .toList();
 
         // Save all games
         return gameRepository.saveAll(games);
@@ -78,8 +74,8 @@ public class GameService {
      * Update game score
      */
     public Game updateGameScore(Long gameId, int player1Score, int player2Score) {
-        Game game = gameRepository.findById(gameId)
-            .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+        var game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
 
         game.setPlayer1Score(player1Score);
         game.setPlayer2Score(player2Score);

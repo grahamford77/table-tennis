@@ -1,7 +1,10 @@
+import org.liquibase.gradle.LiquibaseTask
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.3'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'org.liquibase.gradle' version '2.2.2'
 }
 
 group = 'com.tabletennis'
@@ -22,6 +25,16 @@ dependencies {
     implementation 'com.h2database:h2'
     implementation 'org.postgresql:postgresql'
 
+    // Liquibase 4.32.0 - Compatible with Gradle plugin 2.2.2
+    implementation 'org.liquibase:liquibase-core:4.32.0'
+
+    // Liquibase runtime dependencies required for Gradle plugin 2.2.2
+    liquibaseRuntime 'org.liquibase:liquibase-core:4.32.0'
+    liquibaseRuntime 'com.h2database:h2'
+    liquibaseRuntime 'org.postgresql:postgresql'
+    liquibaseRuntime 'org.yaml:snakeyaml:2.0'
+    liquibaseRuntime 'info.picocli:picocli:4.7.5'
+
     // Lombok - Latest version compatible with Java 17+
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
@@ -39,4 +52,88 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+// Liquibase Configuration
+liquibase {
+    activities {
+        main {
+            changeLogFile 'db/changelog/db.changelog-master.xml'
+            url 'jdbc:h2:file:./data/tabletennis;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE'
+            username 'sa'
+            driver 'org.h2.Driver'
+            searchPath 'src/main/resources'
+            // Note: password property omitted for H2 as it doesn't require one
+        }
+        // Configuration for PostgreSQL (production)
+        postgres {
+            changeLogFile 'db/changelog/db.changelog-master.xml'
+            url project.findProperty('liquibase.url') ?: 'jdbc:postgresql://localhost:5432/tabletennis'
+            username project.findProperty('liquibase.username') ?: 'postgres'
+            password project.findProperty('liquibase.password') ?: 'password'
+            driver 'org.postgresql.Driver'
+            searchPath 'src/main/resources'
+        }
+    }
+    runList = 'main'
+}
+
+// Liquibase tasks - Use the plugin's built-in tasks with custom configurations
+// The plugin automatically creates tasks like 'update', 'status', etc.
+// We just need to configure them properly
+
+// Set default activity for all Liquibase tasks
+afterEvaluate {
+    tasks.withType(LiquibaseTask).tap {
+        configureEach {
+            // Use the 'main' activity configuration by default
+            // Individual tasks can override this if needed
+        }
+    }
+}
+
+// Custom wrapper tasks for easier usage
+tasks.register('liquibaseUpdateH2') {
+    group = 'liquibase'
+    description = 'Update H2 database to the latest version'
+    dependsOn 'update'
+    doFirst {
+        project.liquibase.runList = 'main'
+    }
+}
+
+tasks.register('liquibaseStatusH2') {
+    group = 'liquibase'
+    description = 'Show the status of all changesets in H2'
+    dependsOn 'status'
+    doFirst {
+        project.liquibase.runList = 'main'
+    }
+}
+
+tasks.register('liquibaseValidateH2') {
+    group = 'liquibase'
+    description = 'Validate the changelog for syntax errors'
+    dependsOn 'validate'
+    doFirst {
+        project.liquibase.runList = 'main'
+    }
+}
+
+tasks.register('liquibaseUpdatePostgres') {
+    group = 'liquibase'
+    description = 'Update PostgreSQL database to the latest version'
+    dependsOn 'update'
+    doFirst {
+        project.liquibase.runList = 'postgres'
+    }
+}
+
+tasks.register('liquibaseStatusPostgres') {
+    group = 'liquibase'
+    description = 'Show the status of all changesets in PostgreSQL'
+    dependsOn 'status'
+    doFirst {
+        project.liquibase.runList = 'postgres'
+    }
 }

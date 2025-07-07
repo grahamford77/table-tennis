@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="001-create-users-table" author="system">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(20)" defaultValue="USER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="002-create-players-table" author="system">
+        <createTable tableName="players">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="003-create-tournaments-table" author="system">
+        <createTable tableName="tournaments">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(1000)"/>
+            <column name="date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="time" type="TIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="location" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="max_entrants" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="004-create-tournament-registrations-table" author="system">
+        <createTable tableName="tournament_registrations">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="player_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tournament_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseTableName="tournament_registrations"
+            baseColumnNames="player_id"
+            referencedTableName="players"
+            referencedColumnNames="id"
+            constraintName="fk_registration_player"/>
+
+        <addForeignKeyConstraint
+            baseTableName="tournament_registrations"
+            baseColumnNames="tournament_id"
+            referencedTableName="tournaments"
+            referencedColumnNames="id"
+            constraintName="fk_registration_tournament"/>
+    </changeSet>
+
+    <changeSet id="005-create-games-table" author="system">
+        <createTable tableName="games">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tournament_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="player1_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="player2_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="game_order" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="player1_score" type="INT"/>
+            <column name="player2_score" type="INT"/>
+            <column name="status" type="VARCHAR(20)" defaultValue="SCHEDULED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="played_at" type="TIMESTAMP"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+            baseTableName="games"
+            baseColumnNames="tournament_id"
+            referencedTableName="tournaments"
+            referencedColumnNames="id"
+            constraintName="fk_game_tournament"/>
+
+        <addForeignKeyConstraint
+            baseTableName="games"
+            baseColumnNames="player1_id"
+            referencedTableName="players"
+            referencedColumnNames="id"
+            constraintName="fk_game_player1"/>
+
+        <addForeignKeyConstraint
+            baseTableName="games"
+            baseColumnNames="player2_id"
+            referencedTableName="players"
+            referencedColumnNames="id"
+            constraintName="fk_game_player2"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,8 +1,6 @@
 package com.tabletennis.controller;
 
 import com.tabletennis.dto.RegistrationRequest;
-import com.tabletennis.entity.Player;
-import com.tabletennis.entity.Tournament;
 import com.tabletennis.entity.TournamentRegistration;
 import com.tabletennis.service.PlayerService;
 import com.tabletennis.service.RegistrationService;
@@ -16,8 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
 
 /**
  * Controller for handling tournament registrations
@@ -46,18 +42,18 @@ public class RegistrationController {
     public ResponseEntity<String> processRegistration(@Valid @RequestBody RegistrationRequest registrationRequest) {
         try {
             // Find the tournament
-            Tournament tournament = tournamentService.findById(registrationRequest.getTournamentId())
-                .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
+            var tournament = tournamentService.findById(registrationRequest.getTournamentId())
+                    .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
 
             // Find or create the player
-            Player player = playerService.findOrCreatePlayer(
-                registrationRequest.getFirstName(),
-                registrationRequest.getSurname(),
-                registrationRequest.getEmail()
+            var player = playerService.findOrCreatePlayer(
+                    registrationRequest.getFirstName(),
+                    registrationRequest.getSurname(),
+                    registrationRequest.getEmail()
             );
 
             // Create registration entity
-            TournamentRegistration registration = new TournamentRegistration(player, tournament);
+            var registration = new TournamentRegistration(player, tournament);
 
             registrationService.save(registration);
             return ResponseEntity.ok().body(JSON_SUCCESS_TRUE);
@@ -73,7 +69,7 @@ public class RegistrationController {
 
     @GetMapping("/registrations")
     public String showRegistrations(Model model) {
-        List<TournamentRegistration> allRegistrations = registrationService.findAll();
+        var allRegistrations = registrationService.findAll();
         model.addAttribute("registrations", allRegistrations);
         model.addAttribute("tournamentCounts", registrationService.getTournamentCounts());
         return "registrations";

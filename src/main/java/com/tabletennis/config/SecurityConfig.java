@@ -33,7 +33,7 @@ public class SecurityConfig {
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        var result = http
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/tournaments/**").hasRole("ADMIN")
@@ -56,7 +56,7 @@ public class SecurityConfig {
             .headers(headers -> headers
                 .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 
-        return http.build();
+        return result.build();
     }
 
     /**

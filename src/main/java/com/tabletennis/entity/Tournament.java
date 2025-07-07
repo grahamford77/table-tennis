@@ -70,4 +70,16 @@ public class Tournament {
         this.location = location;
         this.maxEntrants = maxEntrants;
     }
+
+    /**
+     * Get display name for tournament dropdown
+     * Format: "Tournament Name - DD MMM YY"
+     */
+    public String getDisplayName() {
+        if (date != null) {
+            var formatter = java.time.format.DateTimeFormatter.ofPattern("dd MMM yy");
+            return name + " - " + date.format(formatter);
+        }
+        return name;
+    }
 }

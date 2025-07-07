@@ -1,7 +1,6 @@
 package com.tabletennis.controller;
 
 import com.tabletennis.entity.Game;
-import com.tabletennis.entity.Tournament;
 import com.tabletennis.service.GameService;
 import com.tabletennis.service.RegistrationService;
 import com.tabletennis.service.TournamentService;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.List;
 
 /**
  * Controller for admin area functionality.
@@ -42,11 +39,11 @@ public class AdminController {
     @GetMapping
     public String showAdminDashboard(Model model, Authentication authentication) {
         // Get summary statistics for the dashboard
-        long totalTournaments = tournamentService.findAllOrderByDate().size();
-        long totalRegistrations = registrationService.findAll().size();
+        var totalTournaments = tournamentService.findAllOrderByDate().size();
+        var totalRegistrations = registrationService.findAll().size();
 
         // NEW: Count tournaments starting within the next 2 weeks
-        long activeTournaments = tournamentService.countActiveTournaments();
+        var activeTournaments = tournamentService.countActiveTournaments();
 
         model.addAttribute("totalTournaments", totalTournaments);
         model.addAttribute("totalRegistrations", totalRegistrations);
@@ -68,16 +65,16 @@ public class AdminController {
     @PostMapping("/tournaments/{id}/start")
     public String startTournament(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
-            Tournament tournament = tournamentService.findById(id)
-                .orElse(null);
+            var tournament = tournamentService.findById(id)
+                    .orElse(null);
             if (tournament == null) {
                 redirectAttributes.addFlashAttribute(ERROR_ATTRIBUTE, TOURNAMENT_NOT_FOUND);
                 return REDIRECT_ADMIN;
             }
 
-            List<Game> games = gameService.startTournament(tournament);
+            var games = gameService.startTournament(tournament);
             redirectAttributes.addFlashAttribute(SUCCESS_ATTRIBUTE,
-                "Tournament started successfully! " + games.size() + " games created.");
+                    "Tournament started successfully! " + games.size() + " games created.");
 
             return "redirect:/admin/tournaments/" + id + "/games";
         } catch (IllegalStateException e) {
@@ -88,16 +85,16 @@ public class AdminController {
 
     @GetMapping("/tournaments/{id}/games")
     public String showTournamentGames(@PathVariable Long id, Model model, Authentication authentication) {
-        Tournament tournament = tournamentService.findById(id)
-            .orElse(null);
+        var tournament = tournamentService.findById(id)
+                .orElse(null);
         if (tournament == null) {
             model.addAttribute(ERROR_ATTRIBUTE, TOURNAMENT_NOT_FOUND);
             return REDIRECT_ADMIN;
         }
 
-        List<Game> games = gameService.getGamesForTournament(tournament);
-        long totalGames = games.size();
-        long completedGames = games.stream().mapToLong(g -> g.getStatus() == Game.GameStatus.COMPLETED ? 1 : 0).sum();
+        var games = gameService.getGamesForTournament(tournament);
+        var totalGames = games.size();
+        var completedGames = games.stream().mapToLong(g -> g.getStatus() == Game.GameStatus.COMPLETED ? 1 : 0).sum();
 
         model.addAttribute("tournament", tournament);
         model.addAttribute("games", games);
@@ -115,14 +112,14 @@ public class AdminController {
 
     @PostMapping("/games/{gameId}/result")
     public String updateGameResult(@PathVariable Long gameId,
-                                 @RequestParam Integer player1Score,
-                                 @RequestParam Integer player2Score,
-                                 RedirectAttributes redirectAttributes) {
+            @RequestParam Integer player1Score,
+            @RequestParam Integer player2Score,
+            RedirectAttributes redirectAttributes) {
         try {
-            Game updatedGame = gameService.updateGameScore(gameId, player1Score, player2Score);
-            Tournament tournament = updatedGame.getTournament();
+            var updatedGame = gameService.updateGameScore(gameId, player1Score, player2Score);
+            var tournament = updatedGame.getTournament();
 
-            String message = "Game result updated: "
+            var message = "Game result updated: "
                     + updatedGame.getPlayer1Name()
                     + " "
                     + player1Score
