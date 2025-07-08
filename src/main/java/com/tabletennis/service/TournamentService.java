@@ -3,7 +3,8 @@ package com.tabletennis.service;
 import com.tabletennis.dto.TournamentDto;
 import com.tabletennis.dto.TournamentRequest;
 import com.tabletennis.entity.Tournament;
-import com.tabletennis.mapping.EntityToDtoMapper;
+import com.tabletennis.mapping.TournamentMapper;
+import com.tabletennis.mapping.RegistrationMapper;
 import com.tabletennis.repository.TournamentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,8 @@ public class TournamentService {
     private final TournamentRepository tournamentRepository;
     private final GameService gameService;
     private final RegistrationService registrationService;
-    private final EntityToDtoMapper mapper;
+    private final TournamentMapper tournamentMapper;
+    private final RegistrationMapper registrationMapper;
 
     /**
      * Find all tournaments ordered by date and return as DTOs
@@ -32,9 +34,11 @@ public class TournamentService {
     public List<TournamentDto> findAllOrderByDate() {
         return tournamentRepository.findAllByOrderByDateAsc().stream()
             .map(tournament -> {
-                var registrations = registrationService.findByTournamentDto(tournament);
+                var registrations = registrationService.findByTournament(tournament).stream()
+                    .map(registrationMapper::convertToDto)
+                    .toList();
                 var isStarted = gameService.isTournamentStarted(tournament);
-                return mapper.convertToDto(tournament, registrations, isStarted);
+                return tournamentMapper.convertToDto(tournament, registrations, isStarted);
             })
             .toList();
     }
@@ -45,9 +49,11 @@ public class TournamentService {
     public Optional<TournamentDto> findByIdDto(Long id) {
         return tournamentRepository.findById(id)
             .map(tournament -> {
-                var registrations = registrationService.findByTournamentDto(tournament);
+                var registrations = registrationService.findByTournament(tournament).stream()
+                    .map(registrationMapper::convertToDto)
+                    .toList();
                 var isStarted = gameService.isTournamentStarted(tournament);
-                return mapper.convertToDto(tournament, registrations, isStarted);
+                return tournamentMapper.convertToDto(tournament, registrations, isStarted);
             });
     }
 
@@ -121,7 +127,7 @@ public class TournamentService {
 
                 return !isFull;
             })
-            .map(mapper::convertToDto)
+            .map(tournamentMapper::convertToDto)
             .toList();
     }
 

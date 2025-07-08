@@ -3,7 +3,7 @@ package com.tabletennis.service;
 import com.tabletennis.dto.RegistrationDto;
 import com.tabletennis.entity.Tournament;
 import com.tabletennis.entity.TournamentRegistration;
-import com.tabletennis.mapping.EntityToDtoMapper;
+import com.tabletennis.mapping.RegistrationMapper;
 import com.tabletennis.repository.TournamentRegistrationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +22,14 @@ import java.util.stream.Collectors;
 public class RegistrationService {
 
     private final TournamentRegistrationRepository registrationRepository;
-    private final EntityToDtoMapper mapper;
+    private final RegistrationMapper registrationMapper;
 
     /**
      * Find all tournament registrations and return as DTOs
      */
     public List<RegistrationDto> findAllDto() {
         return registrationRepository.findAll().stream()
-            .map(mapper::convertToDto)
+            .map(registrationMapper::convertToDto)
             .toList();
     }
 
@@ -66,20 +66,11 @@ public class RegistrationService {
     }
 
     /**
-     * Find registrations by tournament and return as DTOs
-     */
-    public List<RegistrationDto> findByTournamentDto(Tournament tournament) {
-        return registrationRepository.findByTournament(tournament).stream()
-            .map(mapper::convertToDto)
-            .toList();
-    }
-
-    /**
      * Find registrations by tournament ID and return as DTOs
      */
     public List<RegistrationDto> findByTournamentIdDto(Long tournamentId) {
         return registrationRepository.findByTournamentId(tournamentId).stream()
-            .map(mapper::convertToDto)
+            .map(registrationMapper::convertToDto)
             .toList();
     }
 }

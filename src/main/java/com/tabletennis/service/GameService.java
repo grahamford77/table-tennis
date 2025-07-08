@@ -1,18 +1,19 @@
 package com.tabletennis.service;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
-
 import com.tabletennis.dto.GameDto;
 import com.tabletennis.dto.TournamentDto;
 import com.tabletennis.entity.Game;
 import com.tabletennis.entity.Tournament;
-import com.tabletennis.mapping.EntityToDtoMapper;
+import com.tabletennis.mapping.GameMapper;
+import com.tabletennis.mapping.TournamentMapper;
 import com.tabletennis.repository.GameRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 /**
  * Service for managing tournament games
@@ -24,7 +25,8 @@ public class GameService {
 
     private final GameRepository gameRepository;
     private final RegistrationService registrationService;
-    private final EntityToDtoMapper mapper;
+    private final GameMapper gameMapper;
+    private final TournamentMapper tournamentMapper;
 
     /**
      * Create round-robin games for a tournament
@@ -59,7 +61,7 @@ public class GameService {
         // Save all games
         var savedGames = gameRepository.saveAll(games);
         return savedGames.stream()
-                .map(mapper::convertToDto)
+                .map(gameMapper::convertToDto)
                 .toList();
     }
 
@@ -68,15 +70,15 @@ public class GameService {
      */
     public List<GameDto> getGamesForTournamentDto(Tournament tournament) {
         return gameRepository.findByTournamentOrderByGameOrderAsc(tournament).stream()
-                .map(mapper::convertToDto)
-                .toList();
+            .map(gameMapper::convertToDto)
+            .toList();
     }
 
     /**
      * Check if tournament has been started (has games) - takes TournamentDto
      */
     public boolean isTournamentStarted(TournamentDto tournamentDto) {
-        var tournament = mapper.convertToEntity(tournamentDto);
+        var tournament = tournamentMapper.convertToEntity(tournamentDto);
         return gameRepository.existsByTournament(tournament);
     }
 
@@ -92,7 +94,7 @@ public class GameService {
      */
     public GameDto updateGameScore(Long gameId, int player1Score, int player2Score) {
         var game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+            .orElseThrow(() -> new IllegalArgumentException("Game not found"));
 
         game.setPlayer1Score(player1Score);
         game.setPlayer2Score(player2Score);
@@ -100,6 +102,6 @@ public class GameService {
         game.setPlayedAt(java.time.LocalDateTime.now());
 
         var savedGame = gameRepository.save(game);
-        return mapper.convertToDto(savedGame);
+        return gameMapper.convertToDto(savedGame);
     }
 }
