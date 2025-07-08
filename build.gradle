@@ -48,6 +48,9 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter'
     testImplementation platform('org.junit:junit-bom:5.11.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    // Faker for test data generation
+    testImplementation 'net.datafaker:datafaker:2.4.2'
 }
 
 test {

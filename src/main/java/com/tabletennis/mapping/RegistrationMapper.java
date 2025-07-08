@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class RegistrationMapper {
 
     private final PlayerMapper playerMapper;
+    private final TournamentMapper tournamentMapper;
 
     /**
      * Convert TournamentRegistration entity to DTO
@@ -25,6 +26,9 @@ public class RegistrationMapper {
 
         // Convert player to DTO using PlayerMapper
         dto.setPlayer(playerMapper.convertToDto(registration.getPlayer()));
+
+        // Convert tournament to DTO using TournamentMapper
+        dto.setTournament(tournamentMapper.convertToDto(registration.getTournament()));
 
         // Set flattened fields for easy access
         dto.setTournamentName(registration.getTournament().getName());

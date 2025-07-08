@@ -38,22 +38,8 @@ public class PlayerService {
      * Otherwise create new player
      */
     public Player findOrCreatePlayer(String firstName, String surname, String email) {
-        var existingPlayer = findByEmail(email);
-
-        if (existingPlayer.isPresent()) {
-            // Update existing player's name if different
-            var player = existingPlayer.get();
-            if (!player.getFirstName().equals(firstName) || !player.getSurname().equals(surname)) {
-                player.setFirstName(firstName);
-                player.setSurname(surname);
-                return save(player);
-            }
-            return player;
-        } else {
-            // Create new player
-            var newPlayer = new Player(firstName, surname, email);
-            return save(newPlayer);
-        }
+        return findByEmail(email)
+                .orElseGet(() -> save(new Player(firstName, surname, email)));
     }
 
 }

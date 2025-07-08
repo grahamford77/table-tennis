@@ -25,6 +25,6 @@ public class TournamentDto {
     private String displayName;
     private List<RegistrationDto> registrations;
     private Integer currentRegistrations;
-    private Boolean isStarted;
-    private Boolean isFull;
+    private boolean isStarted;
+    private boolean isFull;
 }

@@ -39,9 +39,9 @@ public class TournamentMapper {
     public TournamentDto convertToDto(Tournament tournament, List<RegistrationDto> registrations, boolean isStarted) {
         var dto = convertToDto(tournament);
         dto.setRegistrations(registrations);
-        dto.setCurrentRegistrations(registrations.size());
-        dto.setIsStarted(isStarted);
-        dto.setIsFull(registrations.size() >= tournament.getMaxEntrants());
+        dto.setCurrentRegistrations(registrations != null ? registrations.size() : 0);
+        dto.setStarted(isStarted);
+        dto.setFull(registrations != null && registrations.size() >= tournament.getMaxEntrants());
         return dto;
     }
 

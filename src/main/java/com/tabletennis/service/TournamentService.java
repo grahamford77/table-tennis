@@ -67,21 +67,23 @@ public class TournamentService {
     /**
      * Create new tournament from request DTO
      */
-    public void createTournament(TournamentRequest tournamentRequest) {
+    public TournamentDto createTournament(TournamentRequest tournamentRequest) {
         var tournament = new Tournament();
         setTournamentFields(tournament, tournamentRequest);
-        tournamentRepository.save(tournament);
+        var savedTournament = tournamentRepository.save(tournament);
+        return tournamentMapper.convertToDto(savedTournament);
     }
 
     /**
      * Update tournament from request DTO
      */
-    public void updateTournament(Long id, TournamentRequest tournamentRequest) {
+    public TournamentDto updateTournament(Long id, TournamentRequest tournamentRequest) {
         var tournament = tournamentRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Tournament not found"));
 
         setTournamentFields(tournament, tournamentRequest);
-        tournamentRepository.save(tournament);
+        var savedTournament = tournamentRepository.save(tournament);
+        return tournamentMapper.convertToDto(savedTournament);
     }
 
     /**
