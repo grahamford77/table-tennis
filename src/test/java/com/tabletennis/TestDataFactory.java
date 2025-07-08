@@ -28,7 +28,7 @@ public class TestDataFactory {
     // Player creation methods
     public static Player createPlayer() {
         var player = new Player();
-        player.setId(faker.number().randomNumber());
+        // Don't set ID for integration tests - let JPA generate it
         player.setFirstName(faker.name().firstName());
         player.setSurname(faker.name().lastName());
         player.setEmail(faker.internet().emailAddress());
@@ -47,7 +47,7 @@ public class TestDataFactory {
     // Tournament creation methods
     public static Tournament createTournament() {
         var tournament = new Tournament();
-        tournament.setId(faker.number().randomNumber());
+        // Don't set ID for integration tests - let JPA generate it
         tournament.setName(faker.esports().game() + " Championship");
         tournament.setDescription(faker.lorem().sentence(15));
         tournament.setDate(LocalDate.now().plusDays(faker.number().numberBetween(1, 60)));
@@ -87,7 +87,7 @@ public class TestDataFactory {
         var player2 = createPlayer();
 
         var game = new Game();
-        game.setId(faker.number().randomNumber());
+        // Don't set ID for integration tests - let JPA generate it
         game.setTournament(tournament);
         game.setPlayer1(player1);
         game.setPlayer2(player2);
@@ -99,8 +99,18 @@ public class TestDataFactory {
     }
 
     public static Game createGameWithTournament(Tournament tournament) {
-        var game = createGame();
+        var player1 = createPlayer();
+        var player2 = createPlayer();
+
+        var game = new Game();
+        // Don't set ID for integration tests - let JPA generate it
         game.setTournament(tournament);
+        game.setPlayer1(player1);
+        game.setPlayer2(player2);
+        game.setGameOrder(faker.number().numberBetween(1, 10));
+        game.setPlayer1Score(faker.number().numberBetween(0, 21));
+        game.setPlayer2Score(faker.number().numberBetween(0, 21));
+        game.setPlayedAt(LocalDateTime.now());
         return game;
     }
 
@@ -120,15 +130,17 @@ public class TestDataFactory {
     // Registration creation methods
     public static TournamentRegistration createTournamentRegistration() {
         var registration = new TournamentRegistration();
-        registration.setId(faker.number().randomNumber());
+        // Don't set ID for integration tests - let JPA generate it
         registration.setTournament(createTournament());
         registration.setPlayer(createPlayer());
         return registration;
     }
 
     public static TournamentRegistration createTournamentRegistrationWithTournament(Tournament tournament) {
-        var registration = createTournamentRegistration();
+        var registration = new TournamentRegistration();
+        // Don't set ID for integration tests - let JPA generate it
         registration.setTournament(tournament);
+        registration.setPlayer(createPlayer());
         return registration;
     }
 
@@ -147,7 +159,7 @@ public class TestDataFactory {
     // User creation methods
     public static User createUser() {
         var user = new User();
-        user.setId(faker.number().randomNumber());
+        // Don't set ID for integration tests - let JPA generate it
         user.setUsername(faker.internet().username());
         user.setPassword(faker.internet().password());
         return user;
