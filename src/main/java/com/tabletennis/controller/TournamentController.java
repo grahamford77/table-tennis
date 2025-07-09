@@ -4,6 +4,7 @@ import java.util.stream.Collectors;
 
 import com.tabletennis.dto.TournamentDto;
 import com.tabletennis.dto.TournamentRequest;
+import com.tabletennis.service.GameService;
 import com.tabletennis.service.RegistrationService;
 import com.tabletennis.service.TournamentService;
 import jakarta.validation.Valid;
@@ -36,6 +37,7 @@ public class TournamentController {
 
     private final RegistrationService registrationService;
     private final TournamentService tournamentService;
+    private final GameService gameService;
 
     @GetMapping
     public String showTournaments(Model model) {
@@ -46,8 +48,16 @@ public class TournamentController {
         var tournamentRegistrations = allRegistrations.stream()
             .collect(Collectors.groupingBy(r -> r.getTournament() != null ? r.getTournament().getId() : 0L));
 
+        // Create a map of tournament ID to started status
+        var tournamentStartedStatus = tournaments.stream()
+            .collect(Collectors.toMap(
+                TournamentDto::getId,
+                t -> gameService.isTournamentStarted(tournamentService.findById(t.getId()).orElse(null))
+            ));
+
         model.addAttribute("tournaments", tournaments);
         model.addAttribute("tournamentRegistrations", tournamentRegistrations);
+        model.addAttribute("tournamentStartedStatus", tournamentStartedStatus);
         return "tournaments";
     }
 
@@ -91,7 +101,15 @@ public class TournamentController {
     @PostMapping("/delete/{id}")
     public ResponseEntity<String> deleteTournament(@PathVariable Long id) {
         try {
-            if (tournamentService.findById(id).isPresent()) {
+            var tournamentOpt = tournamentService.findById(id);
+            if (tournamentOpt.isPresent()) {
+                var tournament = tournamentOpt.get();
+
+                // Check if tournament is started (has games created)
+                if (gameService.isTournamentStarted(tournament)) {
+                    return ResponseEntity.badRequest().body(JSON_SUCCESS_FALSE_PREFIX + "Cannot delete tournament that has already started" + JSON_SUFFIX);
+                }
+
                 tournamentService.deleteById(id);
                 return ResponseEntity.ok().body(JSON_SUCCESS_DELETED);
             } else {

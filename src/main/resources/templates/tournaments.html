@@ -71,7 +71,17 @@
 
                     <div class="tournament-actions">
                         <a th:href="@{/tournaments/edit/{id}(id=${tournament.id})}" class="edit-btn">✏️ Edit</a>
-                        <button type="button" class="delete-btn" th:onclick="'deleteTournament(' + ${tournament.id} + ')'">🗑️ Delete</button>
+                        <button type="button"
+                                class="delete-btn"
+                                th:if="${tournamentStartedStatus[tournament.id] == false}"
+                                th:onclick="'deleteTournament(' + ${tournament.id} + ')'">🗑️ Delete</button>
+                        <button type="button"
+                                class="delete-btn disabled"
+                                th:if="${tournamentStartedStatus[tournament.id] == true}"
+                                disabled
+                                title="Cannot delete tournament that has already started">
+                            🗑️ Delete (Started)
+                        </button>
                     </div>
                 </div>
             </div>

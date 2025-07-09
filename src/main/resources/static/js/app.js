@@ -77,9 +77,24 @@ function initializeCreateTournamentForm() {
     const form = document.getElementById('createTournamentForm');
     if (!form) return;
 
+    // Set minimum date to today on page load
+    const dateInput = document.getElementById('date');
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('min', today);
+
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
         clearErrors();
+
+        // Validate date is in the future
+        const selectedDate = new Date(document.getElementById('date').value);
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0); // Reset time to beginning of day for comparison
+
+        if (selectedDate <= currentDate) {
+            document.getElementById('dateError').textContent = 'Tournament date must be in the future';
+            return;
+        }
 
         const formData = {
             name: document.getElementById('name').value,

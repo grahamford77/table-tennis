@@ -57,12 +57,6 @@ body {
     animation: none !important;
 }
 
-@keyframes paddle-bounce {}
-@keyframes header-ball-bounce {}
-@keyframes bounce {}
-@keyframes pulse {}
-@keyframes wiggle {}
-
 /* Typography */
 h2 {
     color: #00695c;
@@ -436,6 +430,21 @@ footer a:hover {
     color: white;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
+
+.delete-btn.disabled {
+    background: transparent;
+    border: 2px solid #ccc;
+    color: #999;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.delete-btn.disabled:hover {
+    background: transparent;
+    color: #999;
+    transform: none;
+    box-shadow: none;
 }
 
 /* Logout button styling */

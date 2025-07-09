@@ -73,12 +73,18 @@
 
                 <div class="nav-links">
                     <a href="/tournaments" class="nav-link">← Back to Tournaments</a>
-                    <a href="/" class="nav-link secondary-link">Registration Page</a>
                 </div>
             </div>
         </div>
     </div>
 
     <script src="/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set the minimum date to today
+            var today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').setAttribute('min', today);
+        });
+    </script>
 </body>
 </html>
