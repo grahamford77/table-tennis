@@ -26,6 +26,7 @@ A comprehensive Spring Boot web application for managing table tennis tournament
 ### Administrative Features
 - **Admin Dashboard**: Comprehensive overview with tournament statistics
 - **User Authentication**: Secure login system with role-based access
+- **Email Setup**: Mandatory email configuration for admin users after first login
 - **Admin-Only Areas**: Protected tournament management and game administration
 - **Registration Overview**: View all player registrations and tournament participants
 
@@ -126,6 +127,7 @@ src/
 - **Login Page** (`/login`): Authentication for admin users
 
 ### Admin Pages (Authentication Required)
+- **Email Setup** (`/setup-email`): Mandatory email configuration for new admin users
 - **Dashboard** (`/admin`): Overview with statistics and tournament management
 - **Tournament Management** (`/tournaments`): Create, edit, and delete tournaments
 - **Tournament Games** (`/admin/tournaments/{id}/games`): Game management and score entry
@@ -137,6 +139,12 @@ src/
 - **Admin Login**: Secure authentication with encrypted passwords
 - **Role-Based Access**: Admin role required for administrative functions
 - **Session Management**: Secure session handling with logout functionality
+
+### Email Setup Requirement
+- **Mandatory Email Configuration**: New admin users must provide an email address after first login
+- **Authentication Flow**: Users are redirected to email setup page if email is not configured
+- **Email Validation**: Comprehensive validation with uniqueness checks
+- **Automatic Redirection**: Users are redirected to admin dashboard after successful email setup
 
 ### Password Security
 - **BCrypt Encryption**: Passwords encrypted with strength 12
@@ -256,6 +264,10 @@ src/
 - `POST /admin/tournaments/{id}/start`: Start tournament and generate games
 - `GET /admin/tournaments/{id}/games`: View tournament games
 - `POST /admin/games/{gameId}/result`: Update game score
+
+### User Management Endpoints
+- `GET /setup-email`: Show email setup form (Authenticated users only)
+- `POST /setup-email`: Submit email setup form (Authenticated users only)
 
 ## 📞 Support
 

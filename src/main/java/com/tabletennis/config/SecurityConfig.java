@@ -21,11 +21,14 @@ public class SecurityConfig {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final EmailSetupAuthenticationSuccessHandler emailSetupAuthenticationSuccessHandler;
 
     @Autowired
-    public SecurityConfig(UserService userService, PasswordEncoder passwordEncoder) {
+    public SecurityConfig(UserService userService, PasswordEncoder passwordEncoder,
+                         EmailSetupAuthenticationSuccessHandler emailSetupAuthenticationSuccessHandler) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.emailSetupAuthenticationSuccessHandler = emailSetupAuthenticationSuccessHandler;
     }
 
     /**
@@ -37,11 +40,12 @@ public class SecurityConfig {
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/tournaments/**").hasRole("ADMIN")
+                .requestMatchers("/setup-email").authenticated()
                 .anyRequest().permitAll()
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                .defaultSuccessUrl("/admin", true)
+                .successHandler(emailSetupAuthenticationSuccessHandler)
                 .failureUrl("/login?error=true")
                 .permitAll()
             )

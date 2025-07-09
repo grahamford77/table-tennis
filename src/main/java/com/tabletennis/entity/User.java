@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -34,6 +35,10 @@ public class User {
     @Column(nullable = false)
     @NotBlank(message = "Password is required")
     private String password;
+
+    @Column(unique = true)
+    @Email(message = "Please provide a valid email address")
+    private String email;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
