@@ -1,15 +1,14 @@
 package com.tabletennis.mapping;
 
+import java.util.List;
+
 import com.tabletennis.TestDataFactory;
 import com.tabletennis.dto.RegistrationDto;
-import com.tabletennis.dto.TournamentDto;
 import com.tabletennis.entity.Tournament;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -32,19 +31,19 @@ class TournamentMapperTest {
         // Create test data using TestDataFactory
         tournament = TestDataFactory.createTournament();
         registrationDtos = List.of(
-            TestDataFactory.createRegistrationDto(),
-            TestDataFactory.createRegistrationDto(),
-            TestDataFactory.createRegistrationDto()
+                TestDataFactory.createRegistrationDto(),
+                TestDataFactory.createRegistrationDto(),
+                TestDataFactory.createRegistrationDto()
         );
     }
 
     @Test
     void convertToDto_ShouldMapTournamentToDto() {
         // Given
-        boolean isStarted = false;
+        var isStarted = false;
 
         // When
-        TournamentDto result = tournamentMapper.convertToDto(tournament, registrationDtos, isStarted);
+        var result = tournamentMapper.convertToDto(tournament, registrationDtos, isStarted);
 
         // Then
         assertNotNull(result);
@@ -62,10 +61,10 @@ class TournamentMapperTest {
     @Test
     void convertToDto_WithoutRegistrations_ShouldMapTournamentToDto() {
         // Given
-        boolean isStarted = true;
+        var isStarted = true;
 
         // When
-        TournamentDto result = tournamentMapper.convertToDto(tournament, List.of(), isStarted);
+        var result = tournamentMapper.convertToDto(tournament, List.of(), isStarted);
 
         // Then
         assertNotNull(result);
@@ -83,7 +82,7 @@ class TournamentMapperTest {
     @Test
     void convertToDto_SimpleMapping_ShouldMapTournamentToDto() {
         // When
-        TournamentDto result = tournamentMapper.convertToDto(tournament);
+        var result = tournamentMapper.convertToDto(tournament);
 
         // Then
         assertNotNull(result);
@@ -102,13 +101,13 @@ class TournamentMapperTest {
     void convertToDto_WithNullTournament_ShouldThrowException() {
         // When & Then
         assertThrows(NullPointerException.class, () ->
-            tournamentMapper.convertToDto(null, registrationDtos, false));
+                tournamentMapper.convertToDto(null, registrationDtos, false));
     }
 
     @Test
     void convertToDto_WithNullRegistrations_ShouldHandleGracefully() {
         // When
-        TournamentDto result = tournamentMapper.convertToDto(tournament, null, false);
+        var result = tournamentMapper.convertToDto(tournament, null, false);
 
         // Then
         assertNotNull(result);
@@ -123,7 +122,7 @@ class TournamentMapperTest {
         var tournamentDto = TestDataFactory.createTournamentDtoFromTournament(tournament);
 
         // When
-        Tournament result = tournamentMapper.convertToEntity(tournamentDto);
+        var result = tournamentMapper.convertToEntity(tournamentDto);
 
         // Then
         assertNotNull(result);

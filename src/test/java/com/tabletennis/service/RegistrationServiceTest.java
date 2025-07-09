@@ -48,12 +48,12 @@ class RegistrationServiceTest {
     @Test
     void findAllDto_ShouldReturnRegistrationDtos() {
         // Given
-        List<TournamentRegistration> registrations = List.of(registration);
+        var registrations = List.of(registration);
         when(registrationRepository.findAll()).thenReturn(registrations);
         when(registrationMapper.convertToDto(registration)).thenReturn(registrationDto);
 
         // When
-        List<RegistrationDto> result = registrationService.findAllDto();
+        var result = registrationService.findAllDto();
 
         // Then
         assertNotNull(result);
@@ -66,11 +66,11 @@ class RegistrationServiceTest {
     @Test
     void findByTournament_ShouldReturnRegistrationsForTournament() {
         // Given
-        List<TournamentRegistration> registrations = TestDataFactory.createTournamentRegistrationsForTournament(tournament, 3);
+        var registrations = TestDataFactory.createTournamentRegistrationsForTournament(tournament, 3);
         when(registrationRepository.findByTournament(tournament)).thenReturn(registrations);
 
         // When
-        List<TournamentRegistration> result = registrationService.findByTournament(tournament);
+        var result = registrationService.findByTournament(tournament);
 
         // Then
         assertNotNull(result);
@@ -90,11 +90,11 @@ class RegistrationServiceTest {
     @Test
     void findAll_ShouldReturnAllRegistrations() {
         // Given
-        List<TournamentRegistration> registrations = List.of(registration);
+        var registrations = List.of(registration);
         when(registrationRepository.findAll()).thenReturn(registrations);
 
         // When
-        List<TournamentRegistration> result = registrationService.findAll();
+        var result = registrationService.findAll();
 
         // Then
         assertNotNull(result);
@@ -123,13 +123,13 @@ class RegistrationServiceTest {
     @Test
     void findByTournamentIdDto_ShouldReturnRegistrationDtosForTournament() {
         // Given
-        Long tournamentId = TestDataFactory.randomId();
-        List<TournamentRegistration> registrations = List.of(registration);
+        var tournamentId = TestDataFactory.randomId();
+        var registrations = List.of(registration);
         when(registrationRepository.findByTournamentId(tournamentId)).thenReturn(registrations);
         when(registrationMapper.convertToDto(registration)).thenReturn(registrationDto);
 
         // When
-        List<RegistrationDto> result = registrationService.findByTournamentIdDto(tournamentId);
+        var result = registrationService.findByTournamentIdDto(tournamentId);
 
         // Then
         assertNotNull(result);

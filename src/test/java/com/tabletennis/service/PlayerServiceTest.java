@@ -42,7 +42,7 @@ class PlayerServiceTest {
         when(playerRepository.save(player)).thenReturn(player);
 
         // When
-        Player result = playerService.save(player);
+        var result = playerService.save(player);
 
         // Then
         assertEquals(player, result);
@@ -52,11 +52,11 @@ class PlayerServiceTest {
     @Test
     void findByEmail_WhenPlayerExists_ShouldReturnPlayer() {
         // Given
-        String email = player.getEmail();
+        var email = player.getEmail();
         when(playerRepository.findByEmail(email)).thenReturn(Optional.of(player));
 
         // When
-        Optional<Player> result = playerService.findByEmail(email);
+        var result = playerService.findByEmail(email);
 
         // Then
         assertTrue(result.isPresent());
@@ -67,11 +67,11 @@ class PlayerServiceTest {
     @Test
     void findByEmail_WhenPlayerDoesNotExist_ShouldReturnEmpty() {
         // Given
-        String email = TestDataFactory.randomEmail();
+        var email = TestDataFactory.randomEmail();
         when(playerRepository.findByEmail(email)).thenReturn(Optional.empty());
 
         // When
-        Optional<Player> result = playerService.findByEmail(email);
+        var result = playerService.findByEmail(email);
 
         // Then
         assertFalse(result.isPresent());
@@ -81,14 +81,14 @@ class PlayerServiceTest {
     @Test
     void findOrCreatePlayer_WhenPlayerExists_ShouldReturnExistingPlayer() {
         // Given
-        String firstName = player.getFirstName();
-        String surname = player.getSurname();
-        String email = player.getEmail();
+        var firstName = player.getFirstName();
+        var surname = player.getSurname();
+        var email = player.getEmail();
 
         when(playerRepository.findByEmail(email)).thenReturn(Optional.of(player));
 
         // When
-        Player result = playerService.findOrCreatePlayer(firstName, surname, email);
+        var result = playerService.findOrCreatePlayer(firstName, surname, email);
 
         // Then
         assertEquals(player, result);
@@ -98,11 +98,11 @@ class PlayerServiceTest {
     @Test
     void findOrCreatePlayer_WhenPlayerDoesNotExist_ShouldCreateNewPlayer() {
         // Given
-        String firstName = TestDataFactory.randomName();
-        String surname = TestDataFactory.randomSurname();
-        String email = TestDataFactory.randomEmail();
+        var firstName = TestDataFactory.randomName();
+        var surname = TestDataFactory.randomSurname();
+        var email = TestDataFactory.randomEmail();
 
-        Player newPlayer = TestDataFactory.createPlayer();
+        var newPlayer = TestDataFactory.createPlayer();
         newPlayer.setFirstName(firstName);
         newPlayer.setSurname(surname);
         newPlayer.setEmail(email);
@@ -111,7 +111,7 @@ class PlayerServiceTest {
         when(playerRepository.save(any(Player.class))).thenReturn(newPlayer);
 
         // When
-        Player result = playerService.findOrCreatePlayer(firstName, surname, email);
+        var result = playerService.findOrCreatePlayer(firstName, surname, email);
 
         // Then
         assertNotNull(result);

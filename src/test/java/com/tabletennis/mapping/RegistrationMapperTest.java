@@ -2,9 +2,7 @@ package com.tabletennis.mapping;
 
 import com.tabletennis.TestDataFactory;
 import com.tabletennis.dto.PlayerDto;
-import com.tabletennis.dto.RegistrationDto;
 import com.tabletennis.entity.Player;
-import com.tabletennis.entity.Tournament;
 import com.tabletennis.entity.TournamentRegistration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +35,7 @@ class RegistrationMapperTest {
         registrationMapper = new RegistrationMapper(playerMapper, tournamentMapper);
 
         // Create test data using TestDataFactory
-        Tournament tournament = TestDataFactory.createTournament();
+        var tournament = TestDataFactory.createTournament();
         player = TestDataFactory.createPlayer();
         registration = TestDataFactory.createTournamentRegistrationWithTournament(tournament);
         registration.setPlayer(player);
@@ -52,7 +50,7 @@ class RegistrationMapperTest {
                 .thenReturn(TestDataFactory.createTournamentDtoFromTournament(registration.getTournament()));
 
         // When
-        RegistrationDto result = registrationMapper.convertToDto(registration);
+        var result = registrationMapper.convertToDto(registration);
 
         // Then
         assertNotNull(result);

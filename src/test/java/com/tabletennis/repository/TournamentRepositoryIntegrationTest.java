@@ -1,15 +1,13 @@
 package com.tabletennis.repository;
 
+import java.time.LocalDate;
+
 import com.tabletennis.TestDataFactory;
-import com.tabletennis.entity.Tournament;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-
-import java.time.LocalDate;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -35,13 +33,13 @@ class TournamentRepositoryIntegrationTest {
     @Test
     void findAllByOrderByDateAsc_ShouldReturnTournamentsOrderedByDate() {
         // Given
-        Tournament tournament1 = TestDataFactory.createTournament();
+        var tournament1 = TestDataFactory.createTournament();
         tournament1.setDate(LocalDate.now().plusDays(10));
 
-        Tournament tournament2 = TestDataFactory.createTournament();
+        var tournament2 = TestDataFactory.createTournament();
         tournament2.setDate(LocalDate.now().plusDays(5));
 
-        Tournament tournament3 = TestDataFactory.createTournament();
+        var tournament3 = TestDataFactory.createTournament();
         tournament3.setDate(LocalDate.now().plusDays(15));
 
         entityManager.persistAndFlush(tournament1);
@@ -49,7 +47,7 @@ class TournamentRepositoryIntegrationTest {
         entityManager.persistAndFlush(tournament3);
 
         // When
-        List<Tournament> result = tournamentRepository.findAllByOrderByDateAsc();
+        var result = tournamentRepository.findAllByOrderByDateAsc();
 
         // Then
         assertNotNull(result);
@@ -67,7 +65,7 @@ class TournamentRepositoryIntegrationTest {
     @Test
     void findAllByOrderByDateAsc_WithEmptyDatabase_ShouldReturnEmptyList() {
         // When
-        List<Tournament> result = tournamentRepository.findAllByOrderByDateAsc();
+        var result = tournamentRepository.findAllByOrderByDateAsc();
 
         // Then
         assertNotNull(result);

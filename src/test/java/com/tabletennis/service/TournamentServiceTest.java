@@ -1,9 +1,12 @@
 package com.tabletennis.service;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import com.tabletennis.TestDataFactory;
 import com.tabletennis.dto.RegistrationDto;
 import com.tabletennis.dto.TournamentDto;
-import com.tabletennis.dto.TournamentRequest;
 import com.tabletennis.entity.Tournament;
 import com.tabletennis.entity.TournamentRegistration;
 import com.tabletennis.mapping.RegistrationMapper;
@@ -14,10 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -56,7 +55,7 @@ class TournamentServiceTest {
     @BeforeEach
     void setUp() {
         tournamentService = new TournamentService(
-            tournamentRepository, gameService, registrationService, tournamentMapper, registrationMapper);
+                tournamentRepository, gameService, registrationService, tournamentMapper, registrationMapper);
 
         // Create test data using TestDataFactory
         tournament = TestDataFactory.createTournament();
@@ -67,7 +66,7 @@ class TournamentServiceTest {
     @Test
     void findAllOrderByDate_ShouldReturnTournamentDtos() {
         // Given
-        List<Tournament> tournaments = List.of(tournament);
+        var tournaments = List.of(tournament);
 
         when(tournamentRepository.findAllByOrderByDateAsc()).thenReturn(tournaments);
         when(registrationService.findByTournament(tournament)).thenReturn(registrations);
@@ -76,7 +75,7 @@ class TournamentServiceTest {
         when(tournamentMapper.convertToDto(eq(tournament), any(), anyBoolean())).thenReturn(tournamentDto);
 
         // When
-        List<TournamentDto> result = tournamentService.findAllOrderByDate();
+        var result = tournamentService.findAllOrderByDate();
 
         // Then
         assertNotNull(result);
@@ -90,7 +89,7 @@ class TournamentServiceTest {
     @Test
     void findByIdDto_WhenTournamentExists_ShouldReturnTournamentDto() {
         // Given
-        Long tournamentId = TestDataFactory.randomId();
+        var tournamentId = TestDataFactory.randomId();
         when(tournamentRepository.findById(tournamentId)).thenReturn(Optional.of(tournament));
         when(registrationService.findByTournament(tournament)).thenReturn(registrations);
         when(registrationMapper.convertToDto(any())).thenReturn(new RegistrationDto());
@@ -98,7 +97,7 @@ class TournamentServiceTest {
         when(tournamentMapper.convertToDto(eq(tournament), any(), anyBoolean())).thenReturn(tournamentDto);
 
         // When
-        Optional<TournamentDto> result = tournamentService.findByIdDto(tournamentId);
+        var result = tournamentService.findByIdDto(tournamentId);
 
         // Then
         assertTrue(result.isPresent());
@@ -109,11 +108,11 @@ class TournamentServiceTest {
     @Test
     void findByIdDto_WhenTournamentDoesNotExist_ShouldReturnEmpty() {
         // Given
-        Long tournamentId = TestDataFactory.randomId();
+        var tournamentId = TestDataFactory.randomId();
         when(tournamentRepository.findById(tournamentId)).thenReturn(Optional.empty());
 
         // When
-        Optional<TournamentDto> result = tournamentService.findByIdDto(tournamentId);
+        var result = tournamentService.findByIdDto(tournamentId);
 
         // Then
         assertFalse(result.isPresent());
@@ -123,11 +122,11 @@ class TournamentServiceTest {
     @Test
     void findById_WhenTournamentExists_ShouldReturnTournament() {
         // Given
-        Long tournamentId = TestDataFactory.randomId();
+        var tournamentId = TestDataFactory.randomId();
         when(tournamentRepository.findById(tournamentId)).thenReturn(Optional.of(tournament));
 
         // When
-        Optional<Tournament> result = tournamentService.findById(tournamentId);
+        var result = tournamentService.findById(tournamentId);
 
         // Then
         assertTrue(result.isPresent());
@@ -138,7 +137,7 @@ class TournamentServiceTest {
     @Test
     void deleteById_ShouldDeleteTournament() {
         // Given
-        Long tournamentId = TestDataFactory.randomId();
+        var tournamentId = TestDataFactory.randomId();
 
         // When
         tournamentService.deleteById(tournamentId);
@@ -150,13 +149,13 @@ class TournamentServiceTest {
     @Test
     void createTournament_ShouldCreateAndReturnTournamentDto() {
         // Given
-        TournamentRequest tournamentRequest = TestDataFactory.createTournamentRequest();
-        Tournament newTournament = TestDataFactory.createTournament();
+        var tournamentRequest = TestDataFactory.createTournamentRequest();
+        var newTournament = TestDataFactory.createTournament();
         when(tournamentRepository.save(any(Tournament.class))).thenReturn(newTournament);
         when(tournamentMapper.convertToDto(newTournament)).thenReturn(tournamentDto);
 
         // When
-        TournamentDto result = tournamentService.createTournament(tournamentRequest);
+        var result = tournamentService.createTournament(tournamentRequest);
 
         // Then
         assertNotNull(result);
@@ -168,15 +167,15 @@ class TournamentServiceTest {
     @Test
     void updateTournament_ShouldUpdateAndReturnTournamentDto() {
         // Given
-        Long tournamentId = TestDataFactory.randomId();
-        TournamentRequest tournamentRequest = TestDataFactory.createTournamentRequest();
+        var tournamentId = TestDataFactory.randomId();
+        var tournamentRequest = TestDataFactory.createTournamentRequest();
 
         when(tournamentRepository.findById(tournamentId)).thenReturn(Optional.of(tournament));
         when(tournamentRepository.save(any(Tournament.class))).thenReturn(tournament);
         when(tournamentMapper.convertToDto(tournament)).thenReturn(tournamentDto);
 
         // When
-        TournamentDto result = tournamentService.updateTournament(tournamentId, tournamentRequest);
+        var result = tournamentService.updateTournament(tournamentId, tournamentRequest);
 
         // Then
         assertNotNull(result);
@@ -189,20 +188,20 @@ class TournamentServiceTest {
     @Test
     void countActiveTournaments_ShouldReturnCountOfTournamentsWithinNextTwoWeeks() {
         // Given
-        Tournament activeTournament1 = TestDataFactory.createTournament();
+        var activeTournament1 = TestDataFactory.createTournament();
         activeTournament1.setDate(LocalDate.now().plusDays(5)); // Within 2 weeks
 
-        Tournament activeTournament2 = TestDataFactory.createTournament();
+        var activeTournament2 = TestDataFactory.createTournament();
         activeTournament2.setDate(LocalDate.now().plusWeeks(1)); // Within 2 weeks
 
-        Tournament inactiveTournament = TestDataFactory.createTournament();
+        var inactiveTournament = TestDataFactory.createTournament();
         inactiveTournament.setDate(LocalDate.now().plusWeeks(3)); // Beyond 2 weeks
 
-        List<Tournament> allTournaments = List.of(activeTournament1, activeTournament2, inactiveTournament);
+        var allTournaments = List.of(activeTournament1, activeTournament2, inactiveTournament);
         when(tournamentRepository.findAll()).thenReturn(allTournaments);
 
         // When
-        long result = tournamentService.countActiveTournaments();
+        var result = tournamentService.countActiveTournaments();
 
         // Then
         assertEquals(2L, result);
@@ -212,15 +211,15 @@ class TournamentServiceTest {
     @Test
     void findAvailableForRegistration_ShouldReturnTournamentsNotStartedAndNotFull() {
         // Given
-        Tournament availableTournament = TestDataFactory.createTournament();
+        var availableTournament = TestDataFactory.createTournament();
         availableTournament.setMaxEntrants(10);
 
-        Tournament fullTournament = TestDataFactory.createTournament();
+        var fullTournament = TestDataFactory.createTournament();
         fullTournament.setMaxEntrants(2);
 
-        Tournament startedTournament = TestDataFactory.createTournament();
+        var startedTournament = TestDataFactory.createTournament();
 
-        List<Tournament> allTournaments = List.of(availableTournament, fullTournament, startedTournament);
+        var allTournaments = List.of(availableTournament, fullTournament, startedTournament);
         when(tournamentRepository.findAllByOrderByDateAsc()).thenReturn(allTournaments);
 
         // Available tournament: not started, not full
@@ -230,17 +229,17 @@ class TournamentServiceTest {
         // Full tournament: not started but full
         when(gameService.isTournamentStarted(fullTournament)).thenReturn(false);
         when(registrationService.findByTournament(fullTournament)).thenReturn(
-            TestDataFactory.createTournamentRegistrationsForTournament(fullTournament, 2)
+                TestDataFactory.createTournamentRegistrationsForTournament(fullTournament, 2)
         );
 
         // Started tournament: already started
         when(gameService.isTournamentStarted(startedTournament)).thenReturn(true);
 
-        TournamentDto availableTournamentDto = TestDataFactory.createTournamentDtoFromTournament(availableTournament);
+        var availableTournamentDto = TestDataFactory.createTournamentDtoFromTournament(availableTournament);
         when(tournamentMapper.convertToDto(availableTournament)).thenReturn(availableTournamentDto);
 
         // When
-        List<TournamentDto> result = tournamentService.findAvailableForRegistration();
+        var result = tournamentService.findAvailableForRegistration();
 
         // Then
         assertNotNull(result);
@@ -255,3 +254,5 @@ class TournamentServiceTest {
         verify(tournamentMapper).convertToDto(availableTournament);
     }
 }
+
+

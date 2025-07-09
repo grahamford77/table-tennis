@@ -1,7 +1,6 @@
 package com.tabletennis.mapping;
 
 import com.tabletennis.TestDataFactory;
-import com.tabletennis.dto.GameDto;
 import com.tabletennis.dto.PlayerDto;
 import com.tabletennis.entity.Game;
 import com.tabletennis.entity.Player;
@@ -49,7 +48,7 @@ class GameMapperTest {
         when(playerMapper.convertToDto(player2)).thenReturn(player2Dto);
 
         // When
-        GameDto result = gameMapper.convertToDto(game);
+        var result = gameMapper.convertToDto(game);
 
         // Then
         assertNotNull(result);

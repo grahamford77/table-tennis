@@ -1,7 +1,6 @@
 package com.tabletennis.mapping;
 
 import com.tabletennis.TestDataFactory;
-import com.tabletennis.dto.PlayerDto;
 import com.tabletennis.entity.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,7 @@ class PlayerMapperTest {
     @Test
     void convertToDto_ShouldMapPlayerToDto() {
         // When
-        PlayerDto result = playerMapper.convertToDto(player);
+        var result = playerMapper.convertToDto(player);
 
         // Then
         assertNotNull(result);
@@ -47,10 +46,10 @@ class PlayerMapperTest {
     @Test
     void convertToDto_WithPartialPlayerData_ShouldMapAvailableFields() {
         // Given
-        Player partialPlayer = TestDataFactory.createPlayer();
+        var partialPlayer = TestDataFactory.createPlayer();
 
         // When
-        PlayerDto result = playerMapper.convertToDto(partialPlayer);
+        var result = playerMapper.convertToDto(partialPlayer);
 
         // Then
         assertNotNull(result);
@@ -63,13 +62,13 @@ class PlayerMapperTest {
     @Test
     void convertToDto_WithEmptyStringFields_ShouldMapEmptyStrings() {
         // Given
-        Player emptyFieldPlayer = TestDataFactory.createPlayer();
+        var emptyFieldPlayer = TestDataFactory.createPlayer();
         emptyFieldPlayer.setFirstName("");
         emptyFieldPlayer.setSurname("");
         emptyFieldPlayer.setEmail("");
 
         // When
-        PlayerDto result = playerMapper.convertToDto(emptyFieldPlayer);
+        var result = playerMapper.convertToDto(emptyFieldPlayer);
 
         // Then
         assertNotNull(result);

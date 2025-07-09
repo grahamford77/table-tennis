@@ -1,14 +1,10 @@
 package com.tabletennis.repository;
 
 import com.tabletennis.TestDataFactory;
-import com.tabletennis.entity.Tournament;
-import com.tabletennis.entity.TournamentRegistration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -26,11 +22,11 @@ class TournamentRegistrationRepositoryIntegrationTest {
     @Test
     void findByTournament_WhenRegistrationsExist_ShouldReturnRegistrations() {
         // Given
-        Tournament tournament = TestDataFactory.createTournament();
+        var tournament = TestDataFactory.createTournament();
         entityManager.persistAndFlush(tournament);
 
-        TournamentRegistration registration1 = TestDataFactory.createTournamentRegistrationWithTournament(tournament);
-        TournamentRegistration registration2 = TestDataFactory.createTournamentRegistrationWithTournament(tournament);
+        var registration1 = TestDataFactory.createTournamentRegistrationWithTournament(tournament);
+        var registration2 = TestDataFactory.createTournamentRegistrationWithTournament(tournament);
 
         // Persist players first before persisting registrations
         entityManager.persistAndFlush(registration1.getPlayer());
@@ -39,7 +35,7 @@ class TournamentRegistrationRepositoryIntegrationTest {
         entityManager.persistAndFlush(registration2);
 
         // When
-        List<TournamentRegistration> result = registrationRepository.findByTournament(tournament);
+        var result = registrationRepository.findByTournament(tournament);
 
         // Then
         assertNotNull(result);
@@ -51,11 +47,11 @@ class TournamentRegistrationRepositoryIntegrationTest {
     @Test
     void findByTournament_WhenNoRegistrationsExist_ShouldReturnEmptyList() {
         // Given
-        Tournament tournament = TestDataFactory.createTournament();
+        var tournament = TestDataFactory.createTournament();
         entityManager.persistAndFlush(tournament);
 
         // When
-        List<TournamentRegistration> result = registrationRepository.findByTournament(tournament);
+        var result = registrationRepository.findByTournament(tournament);
 
         // Then
         assertNotNull(result);
@@ -65,18 +61,18 @@ class TournamentRegistrationRepositoryIntegrationTest {
     @Test
     void findByTournament_WithDifferentTournament_ShouldReturnEmptyList() {
         // Given
-        Tournament tournament1 = TestDataFactory.createTournament();
-        Tournament tournament2 = TestDataFactory.createTournament();
+        var tournament1 = TestDataFactory.createTournament();
+        var tournament2 = TestDataFactory.createTournament();
         entityManager.persistAndFlush(tournament1);
         entityManager.persistAndFlush(tournament2);
 
-        TournamentRegistration registration = TestDataFactory.createTournamentRegistrationWithTournament(tournament1);
+        var registration = TestDataFactory.createTournamentRegistrationWithTournament(tournament1);
         // Persist player first before persisting registration
         entityManager.persistAndFlush(registration.getPlayer());
         entityManager.persistAndFlush(registration);
 
         // When
-        List<TournamentRegistration> result = registrationRepository.findByTournament(tournament2);
+        var result = registrationRepository.findByTournament(tournament2);
 
         // Then
         assertNotNull(result);
@@ -86,11 +82,11 @@ class TournamentRegistrationRepositoryIntegrationTest {
     @Test
     void findByTournamentId_WhenRegistrationsExist_ShouldReturnRegistrations() {
         // Given
-        Tournament tournament = TestDataFactory.createTournament();
+        var tournament = TestDataFactory.createTournament();
         entityManager.persistAndFlush(tournament);
 
-        TournamentRegistration registration1 = TestDataFactory.createTournamentRegistrationWithTournament(tournament);
-        TournamentRegistration registration2 = TestDataFactory.createTournamentRegistrationWithTournament(tournament);
+        var registration1 = TestDataFactory.createTournamentRegistrationWithTournament(tournament);
+        var registration2 = TestDataFactory.createTournamentRegistrationWithTournament(tournament);
 
         // Persist players first before persisting registrations
         entityManager.persistAndFlush(registration1.getPlayer());
@@ -99,7 +95,7 @@ class TournamentRegistrationRepositoryIntegrationTest {
         entityManager.persistAndFlush(registration2);
 
         // When
-        List<TournamentRegistration> result = registrationRepository.findByTournamentId(tournament.getId());
+        var result = registrationRepository.findByTournamentId(tournament.getId());
 
         // Then
         assertNotNull(result);
@@ -111,11 +107,11 @@ class TournamentRegistrationRepositoryIntegrationTest {
     @Test
     void findByTournamentId_WhenNoRegistrationsExist_ShouldReturnEmptyList() {
         // Given
-        Tournament tournament = TestDataFactory.createTournament();
+        var tournament = TestDataFactory.createTournament();
         entityManager.persistAndFlush(tournament);
 
         // When
-        List<TournamentRegistration> result = registrationRepository.findByTournamentId(tournament.getId());
+        var result = registrationRepository.findByTournamentId(tournament.getId());
 
         // Then
         assertNotNull(result);
@@ -125,10 +121,10 @@ class TournamentRegistrationRepositoryIntegrationTest {
     @Test
     void findByTournamentId_WithNonExistentTournamentId_ShouldReturnEmptyList() {
         // Given
-        Long nonExistentTournamentId = 999999L;
+        var nonExistentTournamentId = 999999L;
 
         // When
-        List<TournamentRegistration> result = registrationRepository.findByTournamentId(nonExistentTournamentId);
+        var result = registrationRepository.findByTournamentId(nonExistentTournamentId);
 
         // Then
         assertNotNull(result);

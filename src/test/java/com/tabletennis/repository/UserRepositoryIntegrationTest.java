@@ -1,13 +1,10 @@
 package com.tabletennis.repository;
 
 import com.tabletennis.TestDataFactory;
-import com.tabletennis.entity.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -25,12 +22,12 @@ class UserRepositoryIntegrationTest {
     @Test
     void findByUsername_WhenUserExists_ShouldReturnUser() {
         // Given
-        User user = TestDataFactory.createUser();
-        String username = user.getUsername();
+        var user = TestDataFactory.createUser();
+        var username = user.getUsername();
         entityManager.persistAndFlush(user);
 
         // When
-        Optional<User> result = userRepository.findByUsername(username);
+        var result = userRepository.findByUsername(username);
 
         // Then
         assertTrue(result.isPresent());
@@ -42,10 +39,10 @@ class UserRepositoryIntegrationTest {
     @Test
     void findByUsername_WhenUserDoesNotExist_ShouldReturnEmpty() {
         // Given
-        String nonExistentUsername = "nonexistent";
+        var nonExistentUsername = "nonexistent";
 
         // When
-        Optional<User> result = userRepository.findByUsername(nonExistentUsername);
+        var result = userRepository.findByUsername(nonExistentUsername);
 
         // Then
         assertFalse(result.isPresent());
@@ -54,13 +51,13 @@ class UserRepositoryIntegrationTest {
     @Test
     void findByUsername_WhenMultipleUsersExist_ShouldReturnCorrectUser() {
         // Given
-        User user1 = TestDataFactory.createUser();
-        User user2 = TestDataFactory.createUser();
+        var user1 = TestDataFactory.createUser();
+        var user2 = TestDataFactory.createUser();
         entityManager.persistAndFlush(user1);
         entityManager.persistAndFlush(user2);
 
         // When
-        Optional<User> result = userRepository.findByUsername(user1.getUsername());
+        var result = userRepository.findByUsername(user1.getUsername());
 
         // Then
         assertTrue(result.isPresent());
@@ -71,12 +68,12 @@ class UserRepositoryIntegrationTest {
     @Test
     void existsByUsername_WhenUserExists_ShouldReturnTrue() {
         // Given
-        User user = TestDataFactory.createUser();
-        String username = user.getUsername();
+        var user = TestDataFactory.createUser();
+        var username = user.getUsername();
         entityManager.persistAndFlush(user);
 
         // When
-        boolean result = userRepository.existsByUsername(username);
+        var result = userRepository.existsByUsername(username);
 
         // Then
         assertTrue(result);
@@ -85,10 +82,10 @@ class UserRepositoryIntegrationTest {
     @Test
     void existsByUsername_WhenUserDoesNotExist_ShouldReturnFalse() {
         // Given
-        String nonExistentUsername = "nonexistent";
+        var nonExistentUsername = "nonexistent";
 
         // When
-        boolean result = userRepository.existsByUsername(nonExistentUsername);
+        var result = userRepository.existsByUsername(nonExistentUsername);
 
         // Then
         assertFalse(result);
@@ -97,13 +94,13 @@ class UserRepositoryIntegrationTest {
     @Test
     void existsByUsername_WithCaseVariation_ShouldBeExact() {
         // Given
-        User user = TestDataFactory.createUser();
+        var user = TestDataFactory.createUser();
         user.setUsername("testuser");
         entityManager.persistAndFlush(user);
 
         // When
-        boolean resultUpperCase = userRepository.existsByUsername("TESTUSER");
-        boolean resultLowerCase = userRepository.existsByUsername("testuser");
+        var resultUpperCase = userRepository.existsByUsername("TESTUSER");
+        var resultLowerCase = userRepository.existsByUsername("testuser");
 
         // Then
         assertFalse(resultUpperCase); // Username search should be exact

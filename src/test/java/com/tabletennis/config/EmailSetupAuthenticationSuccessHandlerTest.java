@@ -40,7 +40,7 @@ class EmailSetupAuthenticationSuccessHandlerTest {
     @Test
     void onAuthenticationSuccess_WhenUserNeedsEmailSetup_ShouldRedirectToSetupEmail() throws IOException {
         // Given
-        String username = "testuser";
+        var username = "testuser";
         when(authentication.getName()).thenReturn(username);
         when(userService.needsEmailSetup(username)).thenReturn(true);
 
@@ -55,7 +55,7 @@ class EmailSetupAuthenticationSuccessHandlerTest {
     @Test
     void onAuthenticationSuccess_WhenUserDoesNotNeedEmailSetup_ShouldRedirectToAdmin() throws IOException {
         // Given
-        String username = "testuser";
+        var username = "testuser";
         when(authentication.getName()).thenReturn(username);
         when(userService.needsEmailSetup(username)).thenReturn(false);
 

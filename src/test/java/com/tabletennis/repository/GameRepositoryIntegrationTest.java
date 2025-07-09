@@ -1,10 +1,6 @@
 package com.tabletennis.repository;
 
-import java.util.List;
-
 import com.tabletennis.TestDataFactory;
-import com.tabletennis.entity.Game;
-import com.tabletennis.entity.Tournament;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -27,21 +23,21 @@ class GameRepositoryIntegrationTest {
     @Test
     void findByTournamentOrderByGameOrderAsc_ShouldReturnGamesOrderedByGameOrder() {
         // Given
-        Tournament tournament = TestDataFactory.createTournament();
+        var tournament = TestDataFactory.createTournament();
         entityManager.persistAndFlush(tournament);
 
-        Game game1 = TestDataFactory.createGameWithTournament(tournament);
+        var game1 = TestDataFactory.createGameWithTournament(tournament);
         game1.setGameOrder(3);
         // Persist players first before persisting game
         entityManager.persistAndFlush(game1.getPlayer1());
         entityManager.persistAndFlush(game1.getPlayer2());
 
-        Game game2 = TestDataFactory.createGameWithTournament(tournament);
+        var game2 = TestDataFactory.createGameWithTournament(tournament);
         game2.setGameOrder(1);
         entityManager.persistAndFlush(game2.getPlayer1());
         entityManager.persistAndFlush(game2.getPlayer2());
 
-        Game game3 = TestDataFactory.createGameWithTournament(tournament);
+        var game3 = TestDataFactory.createGameWithTournament(tournament);
         game3.setGameOrder(2);
         entityManager.persistAndFlush(game3.getPlayer1());
         entityManager.persistAndFlush(game3.getPlayer2());
@@ -51,7 +47,7 @@ class GameRepositoryIntegrationTest {
         entityManager.persistAndFlush(game3);
 
         // When
-        List<Game> result = gameRepository.findByTournamentOrderByGameOrderAsc(tournament);
+        var result = gameRepository.findByTournamentOrderByGameOrderAsc(tournament);
 
         // Then
         assertNotNull(result);
@@ -68,21 +64,20 @@ class GameRepositoryIntegrationTest {
     }
 
     @Test
-    void findByTournamentOrderByGameOrderAsc_WithDifferentTournament_ShouldReturnEmptyList() {
+    void findByTournament_WithNoGames_ShouldReturnEmptyList() {
         // Given
-        Tournament tournament1 = TestDataFactory.createTournament();
-        Tournament tournament2 = TestDataFactory.createTournament();
+        var tournament1 = TestDataFactory.createTournament();
+        var tournament2 = TestDataFactory.createTournament();
         entityManager.persistAndFlush(tournament1);
         entityManager.persistAndFlush(tournament2);
 
-        Game game = TestDataFactory.createGameWithTournament(tournament1);
-        // Persist players first before persisting game
+        var game = TestDataFactory.createGameWithTournament(tournament1);
         entityManager.persistAndFlush(game.getPlayer1());
         entityManager.persistAndFlush(game.getPlayer2());
         entityManager.persistAndFlush(game);
 
         // When
-        List<Game> result = gameRepository.findByTournamentOrderByGameOrderAsc(tournament2);
+        var result = gameRepository.findByTournamentOrderByGameOrderAsc(tournament2);
 
         // Then
         assertNotNull(result);
@@ -90,19 +85,53 @@ class GameRepositoryIntegrationTest {
     }
 
     @Test
+    void findByTournament_WithMultipleTournaments_ShouldReturnOnlyMatchingGames() {
+        // Given
+        var tournament1 = TestDataFactory.createTournament();
+        var tournament2 = TestDataFactory.createTournament();
+        entityManager.persistAndFlush(tournament1);
+        entityManager.persistAndFlush(tournament2);
+
+        // Create games for tournament1
+        var game1 = TestDataFactory.createGameWithTournament(tournament1);
+        entityManager.persistAndFlush(game1.getPlayer1());
+        entityManager.persistAndFlush(game1.getPlayer2());
+        entityManager.persistAndFlush(game1);
+
+        var game2 = TestDataFactory.createGameWithTournament(tournament1);
+        entityManager.persistAndFlush(game2.getPlayer1());
+        entityManager.persistAndFlush(game2.getPlayer2());
+        entityManager.persistAndFlush(game2);
+
+        // Create game for tournament2
+        var game3 = TestDataFactory.createGameWithTournament(tournament2);
+        entityManager.persistAndFlush(game3.getPlayer1());
+        entityManager.persistAndFlush(game3.getPlayer2());
+        entityManager.persistAndFlush(game3);
+
+        // When
+        var result = gameRepository.findByTournamentOrderByGameOrderAsc(tournament1);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertTrue(result.stream().allMatch(game -> game.getTournament().equals(tournament1)));
+    }
+
+    @Test
     void existsByTournament_WhenGamesExist_ShouldReturnTrue() {
         // Given
-        Tournament tournament = TestDataFactory.createTournament();
+        var tournament = TestDataFactory.createTournament();
         entityManager.persistAndFlush(tournament);
 
-        Game game = TestDataFactory.createGameWithTournament(tournament);
+        var game = TestDataFactory.createGameWithTournament(tournament);
         // Persist players first before persisting game
         entityManager.persistAndFlush(game.getPlayer1());
         entityManager.persistAndFlush(game.getPlayer2());
         entityManager.persistAndFlush(game);
 
         // When
-        boolean result = gameRepository.existsByTournament(tournament);
+        var result = gameRepository.existsByTournament(tournament);
 
         // Then
         assertTrue(result);
@@ -111,11 +140,11 @@ class GameRepositoryIntegrationTest {
     @Test
     void existsByTournament_WhenNoGamesExist_ShouldReturnFalse() {
         // Given
-        Tournament tournament = TestDataFactory.createTournament();
+        var tournament = TestDataFactory.createTournament();
         entityManager.persistAndFlush(tournament);
 
         // When
-        boolean result = gameRepository.existsByTournament(tournament);
+        var result = gameRepository.existsByTournament(tournament);
 
         // Then
         assertFalse(result);
@@ -124,19 +153,19 @@ class GameRepositoryIntegrationTest {
     @Test
     void existsByTournament_WithDifferentTournament_ShouldReturnFalse() {
         // Given
-        Tournament tournament1 = TestDataFactory.createTournament();
-        Tournament tournament2 = TestDataFactory.createTournament();
+        var tournament1 = TestDataFactory.createTournament();
+        var tournament2 = TestDataFactory.createTournament();
         entityManager.persistAndFlush(tournament1);
         entityManager.persistAndFlush(tournament2);
 
-        Game game = TestDataFactory.createGameWithTournament(tournament1);
+        var game = TestDataFactory.createGameWithTournament(tournament1);
         // Persist players first before persisting game
         entityManager.persistAndFlush(game.getPlayer1());
         entityManager.persistAndFlush(game.getPlayer2());
         entityManager.persistAndFlush(game);
 
         // When
-        boolean result = gameRepository.existsByTournament(tournament2);
+        var result = gameRepository.existsByTournament(tournament2);
 
         // Then
         assertFalse(result);

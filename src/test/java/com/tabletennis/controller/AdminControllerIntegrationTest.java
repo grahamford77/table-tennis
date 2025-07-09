@@ -1,8 +1,6 @@
 package com.tabletennis.controller;
 
 import com.tabletennis.TestDataFactory;
-import com.tabletennis.entity.Game;
-import com.tabletennis.entity.Player;
 import com.tabletennis.entity.Tournament;
 import com.tabletennis.entity.TournamentRegistration;
 import com.tabletennis.repository.GameRepository;
@@ -61,15 +59,15 @@ class AdminControllerIntegrationTest {
         tournament = TestDataFactory.createTournament();
         tournament = tournamentRepository.save(tournament);
 
-        Player player1 = TestDataFactory.createPlayer();
+        var player1 = TestDataFactory.createPlayer();
         player1 = playerRepository.save(player1);
 
-        Player player2 = TestDataFactory.createPlayer();
+        var player2 = TestDataFactory.createPlayer();
         player2 = playerRepository.save(player2);
 
         // Create registrations
-        TournamentRegistration registration1 = new TournamentRegistration(player1, tournament);
-        TournamentRegistration registration2 = new TournamentRegistration(player2, tournament);
+        var registration1 = new TournamentRegistration(player1, tournament);
+        var registration2 = new TournamentRegistration(player2, tournament);
         registrationRepository.save(registration1);
         registrationRepository.save(registration2);
     }
@@ -100,13 +98,13 @@ class AdminControllerIntegrationTest {
     @WithMockUser(roles = "ADMIN")
     void startTournament_WithInsufficientPlayers_ShouldRedirectWithError() throws Exception {
         // Create tournament with only one player
-        Tournament singlePlayerTournament = TestDataFactory.createTournament();
+        var singlePlayerTournament = TestDataFactory.createTournament();
         singlePlayerTournament = tournamentRepository.save(singlePlayerTournament);
 
-        Player singlePlayer = TestDataFactory.createPlayer();
+        var singlePlayer = TestDataFactory.createPlayer();
         singlePlayer = playerRepository.save(singlePlayer);
 
-        TournamentRegistration singleRegistration = new TournamentRegistration(singlePlayer, singlePlayerTournament);
+        var singleRegistration = new TournamentRegistration(singlePlayer, singlePlayerTournament);
         registrationRepository.save(singleRegistration);
 
         mockMvc.perform(post("/admin/tournaments/{id}/start", singlePlayerTournament.getId()))
@@ -138,11 +136,11 @@ class AdminControllerIntegrationTest {
         // Get the created game
         var games = gameRepository.findAll();
         if (!games.isEmpty()) {
-            Game createdGame = games.getFirst();
+            var createdGame = games.getFirst();
 
             mockMvc.perform(post("/admin/games/{gameId}/result", createdGame.getId())
-                    .param("player1Score", "21")
-                    .param("player2Score", "15"))
+                            .param("player1Score", "21")
+                            .param("player2Score", "15"))
                     .andExpect(status().is3xxRedirection());
         }
     }
@@ -151,8 +149,8 @@ class AdminControllerIntegrationTest {
     @WithMockUser(roles = "ADMIN")
     void updateGameResult_WithInvalidGame_ShouldRedirectWithError() throws Exception {
         mockMvc.perform(post("/admin/games/{gameId}/result", 99999L)
-                .param("player1Score", "21")
-                .param("player2Score", "15"))
+                        .param("player1Score", "21")
+                        .param("player2Score", "15"))
                 .andExpect(status().is3xxRedirection());
     }
 

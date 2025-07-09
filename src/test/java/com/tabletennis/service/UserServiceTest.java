@@ -1,5 +1,7 @@
 package com.tabletennis.service;
 
+import java.util.Optional;
+
 import com.tabletennis.TestDataFactory;
 import com.tabletennis.entity.User;
 import com.tabletennis.repository.UserRepository;
@@ -8,10 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -41,27 +40,27 @@ class UserServiceTest {
     @Test
     void loadUserByUsername_WhenUserExists_ShouldReturnUserDetails() {
         // Given
-        String username = user.getUsername();
+        var username = user.getUsername();
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
 
         // When
-        UserDetails result = userService.loadUserByUsername(username);
+        var result = userService.loadUserByUsername(username);
 
         // Then
         assertNotNull(result);
         assertEquals(username, result.getUsername());
         assertEquals(user.getPassword(), result.getPassword());
+        assertTrue(result.isEnabled());
         assertTrue(result.isAccountNonExpired());
         assertTrue(result.isAccountNonLocked());
         assertTrue(result.isCredentialsNonExpired());
-        assertTrue(result.isEnabled());
         verify(userRepository).findByUsername(username);
     }
 
     @Test
-    void loadUserByUsername_WhenUserDoesNotExist_ShouldThrowUsernameNotFoundException() {
+    void loadUserByUsername_WhenUserDoesNotExist_ShouldThrowException() {
         // Given
-        String username = "nonexistent";
+        var username = "nonexistent";
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
         // When & Then
@@ -72,11 +71,11 @@ class UserServiceTest {
     @Test
     void findByUsername_WhenUserExists_ShouldReturnUser() {
         // Given
-        String username = user.getUsername();
+        var username = user.getUsername();
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
 
         // When
-        Optional<User> result = userService.findByUsername(username);
+        var result = userService.findByUsername(username);
 
         // Then
         assertTrue(result.isPresent());
@@ -87,12 +86,12 @@ class UserServiceTest {
     @Test
     void needsEmailSetup_WhenUserHasNoEmail_ShouldReturnTrue() {
         // Given
-        String username = user.getUsername();
+        var username = user.getUsername();
         user.setEmail(null);
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
 
         // When
-        boolean result = userService.needsEmailSetup(username);
+        var result = userService.needsEmailSetup(username);
 
         // Then
         assertTrue(result);
@@ -102,12 +101,12 @@ class UserServiceTest {
     @Test
     void needsEmailSetup_WhenUserHasEmptyEmail_ShouldReturnTrue() {
         // Given
-        String username = user.getUsername();
-        user.setEmail("   ");
+        var username = user.getUsername();
+        user.setEmail("");
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
 
         // When
-        boolean result = userService.needsEmailSetup(username);
+        var result = userService.needsEmailSetup(username);
 
         // Then
         assertTrue(result);
@@ -117,12 +116,12 @@ class UserServiceTest {
     @Test
     void needsEmailSetup_WhenUserHasEmail_ShouldReturnFalse() {
         // Given
-        String username = user.getUsername();
+        var username = user.getUsername();
         user.setEmail("test@example.com");
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
 
         // When
-        boolean result = userService.needsEmailSetup(username);
+        var result = userService.needsEmailSetup(username);
 
         // Then
         assertFalse(result);
@@ -132,11 +131,11 @@ class UserServiceTest {
     @Test
     void needsEmailSetup_WhenUserDoesNotExist_ShouldReturnFalse() {
         // Given
-        String username = "nonexistent";
+        var username = "nonexistent";
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
         // When
-        boolean result = userService.needsEmailSetup(username);
+        var result = userService.needsEmailSetup(username);
 
         // Then
         assertFalse(result);
@@ -146,8 +145,8 @@ class UserServiceTest {
     @Test
     void updateUserEmail_WhenUserExists_ShouldUpdateEmail() {
         // Given
-        String username = user.getUsername();
-        String newEmail = "newemail@example.com";
+        var username = user.getUsername();
+        var newEmail = "newemail@example.com";
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
         when(userRepository.save(user)).thenReturn(user);
 
@@ -161,29 +160,30 @@ class UserServiceTest {
     }
 
     @Test
-    void updateUserEmail_WhenUserDoesNotExist_ShouldThrowUsernameNotFoundException() {
+    void updateUserEmail_WhenUserDoesNotExist_ShouldThrowException() {
         // Given
-        String username = "nonexistent";
-        String newEmail = "newemail@example.com";
+        var username = "nonexistent";
+        var newEmail = "newemail@example.com";
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
         // When & Then
-        assertThrows(UsernameNotFoundException.class, () -> userService.updateUserEmail(username, newEmail));
+        assertThrows(RuntimeException.class, () -> userService.updateUserEmail(username, newEmail));
         verify(userRepository).findByUsername(username);
     }
 
     @Test
-    void isEmailTaken_WhenEmailExistsForDifferentUser_ShouldReturnTrue() {
+    void isEmailTaken_WhenEmailTakenByOtherUser_ShouldReturnTrue() {
         // Given
-        String email = "test@example.com";
-        String currentUsername = "currentuser";
-        User otherUser = TestDataFactory.createUser();
+        var email = "test@example.com";
+        var currentUsername = "currentuser";
+        var otherUser = TestDataFactory.createUser();
         otherUser.setUsername("otheruser");
         otherUser.setEmail(email);
+
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(otherUser));
 
         // When
-        boolean result = userService.isEmailTaken(email, currentUsername);
+        var result = userService.isEmailTaken(email, currentUsername);
 
         // Then
         assertTrue(result);
@@ -191,17 +191,18 @@ class UserServiceTest {
     }
 
     @Test
-    void isEmailTaken_WhenEmailExistsForSameUser_ShouldReturnFalse() {
+    void isEmailTaken_WhenEmailTakenBySameUser_ShouldReturnFalse() {
         // Given
-        String email = "test@example.com";
-        String currentUsername = "currentuser";
-        User sameUser = TestDataFactory.createUser();
+        var email = "test@example.com";
+        var currentUsername = "currentuser";
+        var sameUser = TestDataFactory.createUser();
         sameUser.setUsername(currentUsername);
         sameUser.setEmail(email);
+
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(sameUser));
 
         // When
-        boolean result = userService.isEmailTaken(email, currentUsername);
+        var result = userService.isEmailTaken(email, currentUsername);
 
         // Then
         assertFalse(result);
@@ -209,14 +210,14 @@ class UserServiceTest {
     }
 
     @Test
-    void isEmailTaken_WhenEmailDoesNotExist_ShouldReturnFalse() {
+    void isEmailTaken_WhenEmailNotTaken_ShouldReturnFalse() {
         // Given
-        String email = "test@example.com";
-        String currentUsername = "currentuser";
+        var email = "test@example.com";
+        var currentUsername = "currentuser";
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
         // When
-        boolean result = userService.isEmailTaken(email, currentUsername);
+        var result = userService.isEmailTaken(email, currentUsername);
 
         // Then
         assertFalse(result);

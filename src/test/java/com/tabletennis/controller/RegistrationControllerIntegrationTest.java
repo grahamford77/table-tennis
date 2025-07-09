@@ -69,7 +69,7 @@ class RegistrationControllerIntegrationTest {
     @Test
     void processRegistration_WithValidData_ShouldReturnSuccess() throws Exception {
         // Given
-        RegistrationRequest request = new RegistrationRequest();
+        var request = new RegistrationRequest();
         request.setTournamentId(tournament.getId());
         request.setFirstName("John");
         request.setSurname("Doe");
@@ -86,7 +86,7 @@ class RegistrationControllerIntegrationTest {
     @Test
     void processRegistration_WithInvalidTournamentId_ShouldReturnError() throws Exception {
         // Given
-        RegistrationRequest request = new RegistrationRequest();
+        var request = new RegistrationRequest();
         request.setTournamentId(99999L);
         request.setFirstName("John");
         request.setSurname("Doe");
@@ -103,7 +103,7 @@ class RegistrationControllerIntegrationTest {
     @Test
     void processRegistration_WithMissingFields_ShouldReturnValidationError() throws Exception {
         // Given
-        RegistrationRequest request = new RegistrationRequest();
+        var request = new RegistrationRequest();
         request.setTournamentId(tournament.getId());
         // Missing required fields
 

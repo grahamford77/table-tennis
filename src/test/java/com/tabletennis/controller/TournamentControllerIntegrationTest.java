@@ -84,7 +84,7 @@ class TournamentControllerIntegrationTest {
     @WithMockUser(roles = "ADMIN")
     void createTournament_WithValidData_ShouldReturnSuccess() throws Exception {
         // Given
-        TournamentRequest request = TestDataFactory.createTournamentRequest();
+        var request = TestDataFactory.createTournamentRequest();
 
         mockMvc.perform(post("/tournaments/create")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -98,7 +98,7 @@ class TournamentControllerIntegrationTest {
     @WithMockUser(roles = "ADMIN")
     void createTournament_WithInvalidData_ShouldReturnValidationError() throws Exception {
         // Given
-        TournamentRequest request = new TournamentRequest();
+        var request = new TournamentRequest();
         // Missing required fields
 
         mockMvc.perform(post("/tournaments/create")
@@ -126,7 +126,7 @@ class TournamentControllerIntegrationTest {
     @WithMockUser(roles = "ADMIN")
     void updateTournament_WithValidData_ShouldReturnSuccess() throws Exception {
         // Given
-        TournamentRequest request = new TournamentRequest();
+        var request = new TournamentRequest();
         request.setName("Updated Tournament");
         request.setDescription("Updated description");
         request.setDate(LocalDate.now().plusDays(30));
@@ -146,7 +146,7 @@ class TournamentControllerIntegrationTest {
     @WithMockUser(roles = "ADMIN")
     void updateTournament_WithInvalidId_ShouldReturnError() throws Exception {
         // Given
-        TournamentRequest request = TestDataFactory.createTournamentRequest();
+        var request = TestDataFactory.createTournamentRequest();
 
         mockMvc.perform(post("/tournaments/edit/{id}", 99999L)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -182,7 +182,7 @@ class TournamentControllerIntegrationTest {
 
     @Test
     void createTournament_WithoutAuthentication_ShouldRedirectToLogin() throws Exception {
-        TournamentRequest request = TestDataFactory.createTournamentRequest();
+        var request = TestDataFactory.createTournamentRequest();
 
         mockMvc.perform(post("/tournaments/create")
                 .contentType(MediaType.APPLICATION_JSON)

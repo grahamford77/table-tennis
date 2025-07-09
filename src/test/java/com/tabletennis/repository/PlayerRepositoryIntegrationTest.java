@@ -1,13 +1,10 @@
 package com.tabletennis.repository;
 
 import com.tabletennis.TestDataFactory;
-import com.tabletennis.entity.Player;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -25,12 +22,12 @@ class PlayerRepositoryIntegrationTest {
     @Test
     void findByEmail_WhenPlayerExists_ShouldReturnPlayer() {
         // Given
-        Player player = TestDataFactory.createPlayer();
-        String email = player.getEmail();
+        var player = TestDataFactory.createPlayer();
+        var email = player.getEmail();
         entityManager.persistAndFlush(player);
 
         // When
-        Optional<Player> result = playerRepository.findByEmail(email);
+        var result = playerRepository.findByEmail(email);
 
         // Then
         assertTrue(result.isPresent());
@@ -43,10 +40,10 @@ class PlayerRepositoryIntegrationTest {
     @Test
     void findByEmail_WhenPlayerDoesNotExist_ShouldReturnEmpty() {
         // Given
-        String nonExistentEmail = TestDataFactory.randomEmail();
+        var nonExistentEmail = TestDataFactory.randomEmail();
 
         // When
-        Optional<Player> result = playerRepository.findByEmail(nonExistentEmail);
+        var result = playerRepository.findByEmail(nonExistentEmail);
 
         // Then
         assertFalse(result.isPresent());
@@ -55,13 +52,13 @@ class PlayerRepositoryIntegrationTest {
     @Test
     void findByEmail_WhenMultiplePlayersExist_ShouldReturnCorrectPlayer() {
         // Given
-        Player player1 = TestDataFactory.createPlayer();
-        Player player2 = TestDataFactory.createPlayer();
+        var player1 = TestDataFactory.createPlayer();
+        var player2 = TestDataFactory.createPlayer();
         entityManager.persistAndFlush(player1);
         entityManager.persistAndFlush(player2);
 
         // When
-        Optional<Player> result = playerRepository.findByEmail(player1.getEmail());
+        var result = playerRepository.findByEmail(player1.getEmail());
 
         // Then
         assertTrue(result.isPresent());
@@ -72,13 +69,13 @@ class PlayerRepositoryIntegrationTest {
     @Test
     void findByEmail_WithCaseVariation_ShouldBeExact() {
         // Given
-        Player player = TestDataFactory.createPlayer();
+        var player = TestDataFactory.createPlayer();
         player.setEmail("test@example.com");
         entityManager.persistAndFlush(player);
 
         // When
-        Optional<Player> resultUpperCase = playerRepository.findByEmail("TEST@EXAMPLE.COM");
-        Optional<Player> resultLowerCase = playerRepository.findByEmail("test@example.com");
+        var resultUpperCase = playerRepository.findByEmail("TEST@EXAMPLE.COM");
+        var resultLowerCase = playerRepository.findByEmail("test@example.com");
 
         // Then
         assertFalse(resultUpperCase.isPresent()); // Email search should be exact

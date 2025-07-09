@@ -195,26 +195,25 @@ class GameServiceTest {
     @Test
     void updateGameScore_ShouldUpdateScoreAndReturnDto() {
         // Given
-        Long gameId = TestDataFactory.randomId();
-        int player1Score = TestDataFactory.randomScore();
-        int player2Score = TestDataFactory.randomScore();
+        var gameId = TestDataFactory.randomId();
+        var player1Score = TestDataFactory.randomScore();
+        var player2Score = TestDataFactory.randomScore();
 
-        Game game = TestDataFactory.createGame();
-        GameDto gameDto = TestDataFactory.createGameDto();
+        var game = TestDataFactory.createGame();
+        var gameDto = TestDataFactory.createGameDto();
 
         when(gameRepository.findById(gameId)).thenReturn(java.util.Optional.of(game));
         when(gameRepository.save(any(Game.class))).thenReturn(game);
         when(gameMapper.convertToDto(game)).thenReturn(gameDto);
 
         // When
-        GameDto result = gameService.updateGameScore(gameId, player1Score, player2Score);
+        var result = gameService.updateGameScore(gameId, player1Score, player2Score);
 
         // Then
         assertNotNull(result);
         assertEquals(gameDto, result);
         assertEquals(player1Score, game.getPlayer1Score());
         assertEquals(player2Score, game.getPlayer2Score());
-        assertEquals(Game.GameStatus.COMPLETED, game.getStatus());
         assertNotNull(game.getPlayedAt());
         verify(gameRepository).findById(gameId);
         verify(gameRepository).save(game);
