@@ -29,6 +29,6 @@ public class AuthController {
             model.addAttribute("message", "You have been logged out successfully.");
         }
 
-        return "login";
+        return "auth/login";
     }
 }

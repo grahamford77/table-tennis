@@ -35,7 +35,7 @@ public class RegistrationController {
     public String showRegistrationForm(Model model) {
         model.addAttribute("registration", new TournamentRegistration());
         model.addAttribute("tournaments", tournamentService.findAvailableForRegistration());
-        return "registration";
+        return "registration/register";
     }
 
     @PostMapping("/register")
@@ -64,7 +64,7 @@ public class RegistrationController {
 
     @GetMapping("/success")
     public String showSuccessPage() {
-        return "success";
+        return "registrations/success";
     }
 
     @GetMapping("/registrations")
@@ -72,6 +72,6 @@ public class RegistrationController {
         var allRegistrations = registrationService.findAllDto();
         model.addAttribute("registrations", allRegistrations);
         model.addAttribute("tournamentCounts", registrationService.getTournamentCounts());
-        return "registrations";
+        return "registration/list";
     }
 }

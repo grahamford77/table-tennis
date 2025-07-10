@@ -58,13 +58,13 @@ public class TournamentController {
         model.addAttribute("tournaments", tournaments);
         model.addAttribute("tournamentRegistrations", tournamentRegistrations);
         model.addAttribute("tournamentStartedStatus", tournamentStartedStatus);
-        return "tournaments";
+        return "tournaments/list";
     }
 
     @GetMapping("/new")
     public String showCreateTournamentForm(Model model) {
         model.addAttribute("tournament", new TournamentDto());
-        return "create-tournament";
+        return "tournaments/create";
     }
 
     @PostMapping("/create")
@@ -81,10 +81,10 @@ public class TournamentController {
     public String showEditTournamentForm(@PathVariable Long id, Model model) {
         var tournament = tournamentService.findByIdDto(id).orElse(null);
         if (tournament == null) {
-            return "redirect:/tournaments";
+            return "redirect:/tournaments/list";
         }
         model.addAttribute("tournament", tournament);
-        return "edit-tournament";
+        return "tournaments/edit";
     }
 
     @PostMapping("/edit/{id}")

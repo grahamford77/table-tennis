@@ -77,22 +77,15 @@ function initializeCreateTournamentForm() {
     const form = document.getElementById('createTournamentForm');
     if (!form) return;
 
-    // Set minimum date to today on page load
-    const dateInput = document.getElementById('date');
-    const today = new Date().toISOString().split('T')[0];
-    dateInput.setAttribute('min', today);
+    // Initialize date validation for create tournament form
+    initializeDateValidation();
 
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
         clearErrors();
 
-        // Validate date is in the future
-        const selectedDate = new Date(document.getElementById('date').value);
-        const currentDate = new Date();
-        currentDate.setHours(0, 0, 0, 0); // Reset time to beginning of day for comparison
-
-        if (selectedDate <= currentDate) {
-            document.getElementById('dateError').textContent = 'Tournament date must be in the future';
+        // Validate date before submission
+        if (!validateTournamentDate()) {
             return;
         }
 
@@ -183,6 +176,80 @@ async function deleteTournament(tournamentId) {
     } catch (error) {
         console.error('Error:', error);
         alert('An error occurred. Please try again.');
+    }
+}
+
+// Tournament Date Validation
+function initializeDateValidation() {
+    const dateInput = document.getElementById('date');
+    const dateError = document.getElementById('dateError');
+
+    if (!dateInput || !dateError) {
+        return;
+    }
+
+    // Set the minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('min', today);
+
+    // Add real-time validation for the date field
+    dateInput.addEventListener('change', function() {
+        validateTournamentDate();
+    });
+
+    dateInput.addEventListener('blur', function() {
+        validateTournamentDate();
+    });
+}
+
+function validateTournamentDate() {
+    const dateInput = document.getElementById('date');
+    const dateError = document.getElementById('dateError');
+
+    if (!dateInput || !dateError) {
+        return true;
+    }
+
+    if (!dateInput.value) {
+        showDateError('Date is required');
+        return false;
+    }
+
+    // Get today's date in YYYY-MM-DD format
+    const today = new Date();
+    const todayString = today.toISOString().split('T')[0];
+
+    // Compare date strings directly to avoid timezone issues
+    const selectedDateString = dateInput.value;
+
+    if (selectedDateString <= todayString) {
+        showDateError('Tournament date must be in the future');
+        return false;
+    }
+
+    hideDateError();
+    return true;
+}
+
+function showDateError(message) {
+    const dateError = document.getElementById('dateError');
+    const dateInput = document.getElementById('date');
+
+    if (dateError && dateInput) {
+        dateError.textContent = message;
+        dateError.style.display = 'block';
+        dateInput.style.borderColor = '#d32f2f';
+    }
+}
+
+function hideDateError() {
+    const dateError = document.getElementById('dateError');
+    const dateInput = document.getElementById('date');
+
+    if (dateError && dateInput) {
+        dateError.textContent = '';
+        dateError.style.display = 'none';
+        dateInput.style.borderColor = '#b2dfdb';
     }
 }
 

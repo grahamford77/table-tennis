@@ -29,7 +29,7 @@ import java.security.Principal;
 public class EmailSetupController {
 
     private static final String EMAIL_SETUP_FORM_ATTRIBUTE = "emailSetupForm";
-    private static final String SETUP_EMAIL_PAGE = "setup-email";
+    private static final String SETUP_EMAIL_PAGE = "admin/setup-email";
 
     private final UserService userService;
 
