@@ -1,3 +1,5 @@
+/* Authentication and password reset styles */
+
 /* Password Reset Form Styles */
 .reset-form {
     max-width: 400px;
@@ -52,10 +54,6 @@
     margin-bottom: 1rem;
 }
 
-.success-icon {
-    color: #28a745;
-}
-
 .error-icon {
     color: #dc3545;
 }
@@ -82,19 +80,6 @@
     margin-bottom: 0.5rem;
 }
 
-/* Action Buttons for Error Page */
-.action-buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-top: 2rem;
-}
-
-.action-buttons .btn {
-    flex: 1;
-    max-width: 200px;
-}
-
 /* Back Link Styling */
 .back-link {
     text-align: center;
@@ -112,27 +97,69 @@
     text-decoration: underline;
 }
 
-/* Form Text Helper */
-.form-text {
-    display: block;
-    margin-top: 0.25rem;
-    font-size: 0.875rem;
-    color: #6c757d;
-}
-
-/* Button Full Width */
-.btn-full-width {
-    width: 100%;
-}
-
-/* Secondary Button Variant */
-.btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
+/* Enhanced success message with animation */
+.success-message {
+    background: linear-gradient(135deg, #00695c 0%, #004d40 100%);
     color: white;
+    padding: 40px;
+    border-radius: 15px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
 }
 
-.btn-secondary:hover {
-    background-color: #545b62;
-    border-color: #4e555b;
+.success-message::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #00e676, #00695c, #00e676, #00695c);
+    border-radius: 17px;
+    z-index: -1;
+    animation: borderGlow 3s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.success-icon {
+    font-size: 4em;
+    margin-bottom: 20px;
+    color: #00e676;
+    text-shadow: 0 0 20px rgba(0, 230, 118, 0.3);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.success-message h2 {
+    font-size: 2.5em;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.success-message p {
+    font-size: 1.3em;
+    opacity: 0.9;
+}
+
+.message-content {
+    color: #555;
+    font-size: 1.2em;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.excitement-text {
+    font-size: 1.4em;
+    color: #00695c;
+    font-weight: 600;
+    margin-bottom: 30px;
 }

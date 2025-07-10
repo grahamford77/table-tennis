@@ -1,0 +1,103 @@
+/* Form styles and validation */
+
+/* Form section styles */
+.form-section h2 {
+    color: #00695c;
+    font-size: 2.2em;
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.form-description {
+    text-align: center;
+    color: #666;
+    font-size: 1.1em;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* Form labels */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #00695c;
+    font-size: 1.1em;
+}
+
+/* Form inputs */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+input[type="time"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #b2dfdb;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #00695c;
+    background: white;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 105, 92, 0.1);
+}
+
+select {
+    cursor: pointer;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Error message styles */
+.error {
+    display: none;
+    color: #d32f2f;
+    font-size: 0.875rem;
+    margin-top: 5px;
+    padding: 5px 10px;
+    background-color: #ffebee;
+    border: 1px solid #ffcdd2;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.error:not(:empty) {
+    display: block;
+}
+
+/* Form text helper */
+.form-text {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #6c757d;
+}

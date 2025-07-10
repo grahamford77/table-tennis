@@ -1,0 +1,294 @@
+/* Responsive design and media queries */
+
+@media (max-width: 768px) {
+    /* Typography adjustments */
+    .header h1 {
+        font-size: 2.2em;
+    }
+
+    h2 {
+        font-size: 1.8em;
+    }
+
+    /* Layout adjustments */
+    .content {
+        padding: 25px;
+    }
+
+    .container, .wide-container {
+        padding: 0 15px;
+    }
+
+    /* Form adjustments */
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    /* Navigation adjustments */
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-link {
+        width: 100%;
+        text-align: center;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+        max-width: 300px;
+    }
+
+    .back-button {
+        display: block;
+        margin: 10px 0;
+    }
+
+    /* Grid adjustments */
+    .tournaments-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .breakdown-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .players-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    .progress-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .tournament-details {
+        grid-template-columns: 1fr;
+    }
+
+    /* Table adjustments */
+    .registrations-table {
+        font-size: 14px;
+    }
+
+    .registrations-table th,
+    .registrations-table td {
+        padding: 12px 8px;
+    }
+
+    /* Admin menu adjustments */
+    .admin-menu-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .menu-content h4 {
+        font-size: 1.2em;
+    }
+
+    .quick-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Tournament Management adjustments */
+    .tournament-management-item {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .tournament-actions {
+        justify-content: center;
+    }
+
+    /* Game card adjustments */
+    .game-matchup {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .vs {
+        margin: 10px 0;
+    }
+
+    /* Score Entry adjustments */
+    .score-inputs {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .score-separator {
+        transform: rotate(90deg);
+        margin: 10px 0;
+    }
+
+    .score-input {
+        width: 100px;
+        height: 60px;
+        font-size: 1.8em;
+    }
+
+    .score-input-group label {
+        font-size: 1em;
+    }
+
+    /* User info adjustments */
+    .user-info {
+        position: static;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Header padding adjustment for mobile */
+    .header {
+        padding: 30px 20px 40px 20px;
+    }
+
+    /* Form adjustments for mobile */
+    .reset-form, .success-page, .error-page {
+        margin: 0 15px;
+        padding: 1.5rem;
+    }
+
+    /* Button adjustments */
+    .action-buttons .btn {
+        flex: 1;
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Extra small screen adjustments */
+    body {
+        padding: 10px;
+    }
+
+    .header {
+        padding: 20px 15px 30px 15px;
+    }
+
+    .header h1 {
+        font-size: 1.8em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    .tournament-card {
+        padding: 20px;
+    }
+
+    .stat-box {
+        padding: 20px;
+    }
+
+    .stat-number {
+        font-size: 2em;
+    }
+
+    .game-card {
+        padding: 15px;
+    }
+
+    .player {
+        padding: 10px;
+    }
+
+    .score-input {
+        width: 70px;
+        height: 50px;
+        font-size: 1.3em;
+    }
+
+    .admin-stat-card {
+        padding: 20px;
+    }
+
+    .stat-value {
+        font-size: 2.5em;
+    }
+
+    .tournament-banner {
+        padding: 30px 20px;
+    }
+
+    .tournament-banner h2 {
+        font-size: 2em;
+    }
+
+    .reset-form, .success-page, .error-page {
+        padding: 1rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    /* Large screen enhancements */
+    .wide-container {
+        max-width: 1400px;
+    }
+
+    .tournaments-grid {
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    }
+
+    .games-grid {
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    }
+
+    .admin-stats {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .breakdown-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+}
+
+/* Print styles */
+@media print {
+    body {
+        background: white;
+        color: black;
+        font-size: 12pt;
+    }
+
+    .header, footer, .nav-links, .action-buttons, .user-info {
+        display: none;
+    }
+
+    .tournament-card, .game-card, .stat-box {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        break-inside: avoid;
+    }
+
+    .registrations-table {
+        font-size: 10pt;
+    }
+
+    .registrations-table th {
+        background: #f0f0f0 !important;
+        color: black !important;
+    }
+}

@@ -1,0 +1,34 @@
+/* Base styles and reset for Rightmove Table Tennis Portal */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    padding: 20px;
+    background-image: url('https://www.transparenttextures.com/patterns/hexellence.png');
+    background-blend-mode: lighten;
+}
+
+/* Typography */
+h2 {
+    color: #00695c;
+    font-size: 2.2em;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* Utility classes */
+.text-center {
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}

@@ -1,0 +1,269 @@
+/* Admin dashboard and management styles */
+
+/* Admin dashboard statistics */
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.admin-stat-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 3px solid #00695c;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 105, 92, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.admin-stat-card:hover::before {
+    left: 100%;
+}
+
+.admin-stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 105, 92, 0.3);
+    border-color: #004d40;
+}
+
+.stat-icon {
+    font-size: 3em;
+    margin-bottom: 15px;
+}
+
+.stat-value {
+    font-size: 3em;
+    font-weight: 700;
+    color: #00695c;
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    color: #666;
+    font-size: 1.2em;
+    font-weight: 500;
+}
+
+/* Tournament breakdown section */
+.tournament-breakdown {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 40px;
+    border: 2px solid #b2dfdb;
+}
+
+.tournament-breakdown h3 {
+    color: #00695c;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+}
+
+.breakdown-item {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    border-left: 4px solid #00695c;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.breakdown-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(0, 105, 92, 0.2);
+}
+
+.tournament-name {
+    font-weight: 600;
+    color: #00695c;
+}
+
+.registration-count {
+    background: linear-gradient(135deg, #4fc3f7 0%, #0288d1 100%);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+/* Admin actions section */
+.admin-actions {
+    margin-bottom: 40px;
+}
+
+.admin-actions h3 {
+    color: #00695c;
+    font-size: 1.8em;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.admin-menu {
+    display: grid;
+    gap: 20px;
+}
+
+.admin-menu-item {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #b2dfdb;
+    border-radius: 15px;
+    padding: 25px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-menu-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 105, 92, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.admin-menu-item:hover::before {
+    left: 100%;
+}
+
+.admin-menu-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 105, 92, 0.2);
+    border-color: #00695c;
+}
+
+.menu-icon {
+    font-size: 3em;
+    min-width: 80px;
+    text-align: center;
+}
+
+.menu-content {
+    flex: 1;
+}
+
+.menu-content h4 {
+    color: #00695c;
+    font-size: 1.3em;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.menu-content p {
+    color: #666;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.menu-arrow {
+    font-size: 2em;
+    color: #00695c;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.admin-menu-item:hover .menu-arrow {
+    transform: translateX(10px);
+}
+
+/* Quick access section */
+.quick-access h3 {
+    color: #00695c;
+    font-size: 1.8em;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.quick-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Tournament Management Styles */
+.tournament-management-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    border-left: 4px solid #00DEB6;
+    margin-bottom: 15px;
+}
+
+.tournament-info {
+    flex: 1;
+}
+
+.tournament-info .tournament-name {
+    display: block;
+    font-weight: 700;
+    color: #00DEB6;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+.tournament-info .tournament-date {
+    display: block;
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.tournament-info .registration-count {
+    background: linear-gradient(135deg, #4fc3f7 0%, #0288d1 100%);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.tournament-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 20px;
+    text-align: right;
+}
+
+.tournament-status {
+    color: #00DEB6;
+    font-weight: 600;
+    font-size: 0.9em;
+    margin-left: 10px;
+}
