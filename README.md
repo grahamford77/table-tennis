@@ -1,48 +1,56 @@
-# Rightmove Table Tennis Portal
+# 🏓 Rightmove Table Tennis Portal
 
-A comprehensive Spring Boot web application for managing table tennis tournaments with player registration, round-robin game management, and administrative features.
+A modern web application for managing table tennis tournaments, player registrations, and games within Rightmove.
 
-## 🏓 Features
+## ✨ Features
 
-### Tournament Management
-- **Create Tournaments**: Add new tournaments with name, description, date, time, location, and maximum entrants
-- **Edit Tournaments**: Modify existing tournament details
-- **Delete Tournaments**: Remove tournaments from the system
-- **Tournament Listing**: View all tournaments with registration counts and participant details
-- **Active Tournament Tracking**: Monitor tournaments starting within the next 2 weeks
+### 🔐 Authentication & Security
+- **User Login System** - Secure authentication with username/password
+- **Forgotten Password** - Email-based password reset functionality
+- **Admin Access Control** - Role-based access to administrative features
+- **Email Setup** - First-time login email configuration
 
-### Player Registration
-- **Registration Form**: Simple, responsive form for tournament registration
-- **Player Management**: Automatic player creation and management by email
-- **Validation**: Comprehensive form validation with error handling
-- **Registration Tracking**: View all registrations with tournament breakdowns
+### 🏆 Tournament Management
+- **Create Tournaments** - Add new tournaments with details (name, description, date, time, location, max entrants)
+- **Edit Tournaments** - Update tournament information
+- **Delete Tournaments** - Remove tournaments (disabled once started)
+- **Tournament Scheduling** - Automatic game generation for round-robin format
+- **Game Results** - Record and track match scores
 
-### Game Management
-- **Round-Robin Tournament**: Automatic generation of games where each player plays every other player
-- **Game Scheduling**: Systematic game ordering and management
-- **Score Recording**: Enter and update game results
-- **Tournament Progress**: Track completion status and statistics
+### 👥 Player & Registration Management
+- **Player Registration** - Register for available tournaments
+- **Player Profiles** - Automatic player creation from registration data
+- **Registration Tracking** - View all tournament registrations
+- **Capacity Management** - Prevent over-registration based on tournament limits
 
-### Administrative Features
-- **Admin Dashboard**: Comprehensive overview with tournament statistics
-- **User Authentication**: Secure login system with role-based access
-- **Email Setup**: Mandatory email configuration for admin users after first login
-- **Admin-Only Areas**: Protected tournament management and game administration
-- **Registration Overview**: View all player registrations and tournament participants
+### 📊 Dashboard & Reporting
+- **Admin Dashboard** - Overview of tournaments, registrations, and statistics
+- **Active Tournaments** - Count of tournaments starting within 2 weeks
+- **Registration Lists** - View participants for each tournament
+- **Game Tracking** - Monitor match progress and results
 
-### Technical Features
-- **Database Management**: Liquibase-based schema versioning and data migration
-- **Multi-Environment Support**: Separate configurations for local H2 and production PostgreSQL
-- **Docker Support**: Containerized deployment with Docker
-- **Professional UI**: Modern, responsive design with Rightmove branding
-- **RESTful API**: JSON-based endpoints for form submissions
+### 📧 Email System
+- **Password Reset Emails** - Secure token-based password recovery
+- **Mailjet Integration** - Professional email delivery service
+- **HTML & Text Templates** - Multi-format email support
+- **Custom Email Templates** - Branded Rightmove styling
 
-## 🚀 Getting Started
+## 🚀 Technology Stack
+
+- **Backend**: Spring Boot 3.5.3, Java 21
+- **Database**: H2 (local), PostgreSQL (production)
+- **Frontend**: Thymeleaf, HTML5, CSS3, JavaScript
+- **Security**: Spring Security with BCrypt password encoding
+- **Email**: Mailjet API for reliable email delivery
+- **Database Migration**: Liquibase for schema management
+- **Testing**: JUnit 5, Mockito, DataFaker for test data
+
+## 🛠️ Setup & Installation
 
 ### Prerequisites
 - Java 21 or higher
-- Gradle 8.0 or higher
-- Docker (optional, for containerized deployment)
+- Gradle 8.1.1 or higher
+- PostgreSQL (for production)
 
 ### Local Development
 
@@ -52,9 +60,12 @@ A comprehensive Spring Boot web application for managing table tennis tournament
    cd table-tennis
    ```
 
-2. **Build the application**
+2. **Set up environment variables**
    ```bash
-   ./gradlew build
+   export MAILJET_API_KEY=your-mailjet-api-key
+   export MAILJET_SECRET_KEY=your-mailjet-secret-key
+   export EMAIL_FROM=noreply@rightmove.co.uk
+   export BASE_URL=http://localhost:8080
    ```
 
 3. **Run the application**
@@ -63,216 +74,183 @@ A comprehensive Spring Boot web application for managing table tennis tournament
    ```
 
 4. **Access the application**
-   - Main application: http://localhost:8080
-   - H2 Database console: http://localhost:8080/h2-console
-     - JDBC URL: `jdbc:h2:file:./data/tabletennis`
-     - Username: `sa`
-     - Password: (leave empty)
+   - Main app: http://localhost:8080
+   - H2 Console: http://localhost:8080/h2-console
 
-### Docker Deployment
+### Database Setup
 
-1. **Build Docker image**
+The application uses Liquibase for database migration:
+
+```bash
+# Update H2 database
+./gradlew liquibaseUpdateH2
+
+# Check migration status
+./gradlew liquibaseStatusH2
+```
+
+### Production Deployment
+
+For production with PostgreSQL:
+
+1. **Set environment variables**
    ```bash
-   docker build -t table-tennis-app .
+   export SPRING_PROFILES_ACTIVE=docker
+   export DATABASE_URL=postgresql://username:password@host:port/database
    ```
 
-2. **Run with Docker**
+2. **Build and run with Docker**
    ```bash
-   docker run -p 10000:10000 table-tennis-app
+   docker build -t table-tennis .
+   docker run -p 10000:10000 table-tennis
    ```
 
-3. **Access the application**
-   - Application: http://localhost:10000
+## 📧 Email Configuration
+
+The application uses Mailjet for sending password reset emails. You need to:
+
+1. **Sign up for Mailjet** at [mailjet.com](https://www.mailjet.com)
+2. **Get API credentials** from your Mailjet dashboard
+3. **Set environment variables** as shown above
+4. **Configure sender email** - must be verified in Mailjet
+
+### Email Templates
+
+Email templates are stored in:
+- HTML: `src/main/resources/templates/email/password-reset.html`
+- Text: `src/main/resources/templates/email/password-reset.txt`
+
+## 🔐 Security Features
+
+### Password Reset Flow
+1. User clicks "Forgotten Password?" on login page
+2. Enters email address
+3. System generates unique UUID token (1-hour expiry)
+4. Email sent with secure reset link
+5. User clicks link and enters new password
+6. Token validated and password updated
+
+### Security Measures
+- **No Email Enumeration** - Always shows success message
+- **Token Expiration** - 1-hour limit for security
+- **Secure Token Generation** - UUID-based tokens
+- **Password Validation** - Minimum 8 characters
+- **Automatic Cleanup** - Expired tokens removed
 
 ## 🏗️ Architecture
 
-### Technology Stack
-- **Backend**: Spring Boot 3.3.5, Spring Security, Spring Data JPA
-- **Database**: H2 (local), PostgreSQL (production)
-- **Frontend**: Thymeleaf, HTML5, CSS3, JavaScript
-- **Build Tool**: Gradle
-- **Database Migration**: Liquibase
-- **Testing**: JUnit 5, Spring Boot Test
-
 ### Project Structure
 ```
-src/
-├── main/
-│   ├── java/com/tabletennis/
-│   │   ├── config/           # Security and password configuration
-│   │   ├── controller/       # REST controllers (Admin, Auth, Registration, Tournament)
-│   │   ├── dto/             # Data transfer objects
-│   │   ├── entity/          # JPA entities (Tournament, Player, Game, User, etc.)
-│   │   ├── repository/      # Data access layer
-│   │   └── service/         # Business logic layer
-│   └── resources/
-│       ├── db/changelog/    # Liquibase database migrations
-│       ├── static/css/      # Stylesheets
-│       └── templates/       # Thymeleaf templates
-└── test/                    # Test classes and resources
+src/main/java/com/tabletennis/
+├── config/          # Spring configuration classes
+├── controller/      # Web controllers (Admin, Tournament, Registration)
+├── dto/            # Data Transfer Objects
+├── entity/         # JPA entities
+├── exception/      # Custom exception classes
+├── mapping/        # Entity-DTO mapping services
+├── repository/     # JPA repositories
+└── service/        # Business logic services
+
+src/main/resources/
+├── db/changelog/   # Liquibase migration files
+├── static/        # CSS, JS, images
+└── templates/     # Thymeleaf HTML templates
+   ├── auth/       # Authentication pages
+   ├── admin/      # Admin dashboard
+   └── email/      # Email templates
 ```
 
-### Database Schema
-- **tournaments**: Tournament information and details
-- **players**: Player profiles and contact information
-- **tournament_registrations**: Many-to-many relationship between players and tournaments
-- **games**: Individual game records with scores and status
-- **users**: Authentication and authorization data
+### Key Components
 
-## 📱 User Interface
+- **EmailService** - Handles password reset emails via Mailjet
+- **PasswordResetService** - Manages token generation and validation
+- **TournamentService** - Tournament and game management
+- **UserService** - User authentication and profile management
 
-### Public Pages
-- **Registration Form** (`/`): Tournament registration for players
-- **Success Page** (`/success`): Confirmation after successful registration
-- **Login Page** (`/login`): Authentication for admin users
+## 🧪 Testing
 
-### Admin Pages (Authentication Required)
-- **Email Setup** (`/setup-email`): Mandatory email configuration for new admin users
-- **Dashboard** (`/admin`): Overview with statistics and tournament management
-- **Tournament Management** (`/tournaments`): Create, edit, and delete tournaments
-- **Tournament Games** (`/admin/tournaments/{id}/games`): Game management and score entry
-- **Registration Overview** (`/registrations`): View all player registrations
+The application includes comprehensive test coverage:
 
-## 🔐 Security
-
-### Authentication
-- **Admin Login**: Secure authentication with encrypted passwords
-- **Role-Based Access**: Admin role required for administrative functions
-- **Session Management**: Secure session handling with logout functionality
-
-### Email Setup Requirement
-- **Mandatory Email Configuration**: New admin users must provide an email address after first login
-- **Authentication Flow**: Users are redirected to email setup page if email is not configured
-- **Email Validation**: Comprehensive validation with uniqueness checks
-- **Automatic Redirection**: Users are redirected to admin dashboard after successful email setup
-
-### Password Security
-- **BCrypt Encryption**: Passwords encrypted with strength 12
-- **Secure Configuration**: Separated password configuration to avoid circular dependencies
-
-## 🗄️ Database Management
-
-### Liquibase Integration
-- **Schema Versioning**: Automated database schema management
-- **Data Migration**: Structured data insertion and updates
-- **Environment-Specific**: Different configurations for local and production
-
-### Available Commands
 ```bash
-# Update database schema
-./gradlew liquibaseUpdateH2
+# Run all tests
+./gradlew test
 
-# Check database status
-./gradlew liquibaseStatusH2
-
-# Validate changelog
-./gradlew liquibaseValidateH2
+# Run specific test category
+./gradlew test --tests "*Controller*"
+./gradlew test --tests "*Service*"
+./gradlew test --tests "*Repository*"
 ```
 
-## 🎮 Game Management
+### Test Features
+- **DataFaker** for realistic test data generation
+- **MockMvc** for integration testing
+- **Testcontainers** for database testing
+- **Mocked Email Service** for testing without sending real emails
 
-### Tournament Flow
-1. **Create Tournament**: Admin creates tournament with details
-2. **Player Registration**: Players register through the public form
-3. **Start Tournament**: Admin initiates round-robin game generation
-4. **Game Management**: Track games and record scores
-5. **Monitor Progress**: View completion statistics and results
+## 🎨 UI/UX Features
 
-### Round-Robin Algorithm
-- Automatically generates games for all player combinations
-- Each player plays every other player exactly once
-- Games are ordered systematically for fair play
-- Supports tournaments with 2+ players
+### Responsive Design
+- Mobile-friendly responsive layout
+- Rightmove brand colors (#00DEB6, whites, light greys)
+- Professional table tennis themed styling
+- Accessible form validation and error handling
+
+### User Experience
+- Clear navigation between features
+- Real-time form validation
+- Informative success/error messages
+- Professional email templates with branding
+
+## 📋 API Endpoints
+
+### Public Endpoints
+- `GET /` - Registration form
+- `GET /login` - Login page
+- `POST /forgot-password` - Request password reset
+- `GET /reset-password` - Password reset form
+- `POST /reset-password` - Update password
+
+### Admin Endpoints (Authentication Required)
+- `GET /admin` - Admin dashboard
+- `GET /tournaments` - Tournament management
+- `POST /tournaments/create` - Create new tournament
+- `POST /tournaments/edit/{id}` - Update tournament
+- `DELETE /tournaments/delete/{id}` - Delete tournament
+- `POST /admin/tournaments/{id}/start` - Start tournament
+- `GET /admin/tournaments/{id}/games` - View games
+- `POST /admin/games/{id}/result` - Update game result
 
 ## 🔧 Configuration
 
 ### Application Properties
-- **Local Development**: Uses H2 database on port 8080
-- **Docker Deployment**: Uses PostgreSQL on port 10000
-- **Environment-Specific**: Separate configuration files for different deployments
 
-### Environment Variables
-- Database connection strings configurable via properties files
-- Support for both H2 and PostgreSQL databases
-- Flexible port configuration for different deployment scenarios
+```properties
+# Database Configuration
+spring.datasource.url=jdbc:h2:file:./data/tabletennis
+spring.jpa.hibernate.ddl-auto=none
 
-## 🧪 Testing
+# Email Configuration
+mailjet.api.key=${MAILJET_API_KEY}
+mailjet.secret.key=${MAILJET_SECRET_KEY}
+app.email.from=${EMAIL_FROM:noreply@rightmove.co.uk}
+app.base-url=${BASE_URL:http://localhost:8080}
 
-### Test Coverage
-- **Unit Tests**: Service layer and business logic testing
-- **Integration Tests**: Controller and repository testing
-- **Security Tests**: Authentication and authorization testing
-- **Database Tests**: Data persistence and retrieval testing
-
-### Running Tests
-```bash
-./gradlew test
+# Security
+logging.level.org.springframework.security=DEBUG
 ```
-
-## 📊 Monitoring and Logging
-
-### Logging
-- **SLF4J Integration**: Comprehensive logging throughout the application
-- **Structured Logging**: Parameterized log messages for better performance
-- **Error Tracking**: Detailed error logging for debugging
-
-### Statistics
-- **Tournament Counts**: Active tournaments and registration statistics
-- **Player Tracking**: Registration counts and participation metrics
-- **Game Progress**: Tournament completion tracking
-
-## 🚀 Deployment
-
-### Local Development
-- H2 file-based database for persistence
-- Port 8080 for local access
-- Auto-configuration for development environment
-
-### Production Deployment
-- PostgreSQL database support
-- Docker containerization
-- Port 10000 for production access
-- Environment-specific configurations
 
 ## 🤝 Contributing
 
-### Development Standards
-- **Code Style**: Uses `var` for local variables where appropriate
-- **Stream API**: Functional programming approach for collections
-- **Constructor Injection**: Dependency injection best practices
-- **Service Layer**: Clean separation of concerns
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes with tests
+4. Ensure all tests pass
+5. Submit a pull request
 
-### Code Quality
-- **Lombok Integration**: Reduces boilerplate code
-- **Validation**: Comprehensive input validation
-- **Error Handling**: Graceful error handling and user feedback
-- **Documentation**: Javadoc comments for all public methods
+## 📝 License
 
-## 📝 API Documentation
+Internal Rightmove project - All rights reserved.
 
-### Registration Endpoints
-- `POST /register`: Submit tournament registration (JSON)
-- `GET /registrations`: View all registrations (Admin only)
+## 🆘 Support
 
-### Tournament Endpoints
-- `GET /tournaments`: List all tournaments (Admin only)
-- `POST /tournaments/create`: Create new tournament (Admin only)
-- `POST /tournaments/edit/{id}`: Update tournament (Admin only)
-- `POST /tournaments/delete/{id}`: Delete tournament (Admin only)
-
-### Game Management Endpoints
-- `POST /admin/tournaments/{id}/start`: Start tournament and generate games
-- `GET /admin/tournaments/{id}/games`: View tournament games
-- `POST /admin/games/{gameId}/result`: Update game score
-
-### User Management Endpoints
-- `GET /setup-email`: Show email setup form (Authenticated users only)
-- `POST /setup-email`: Submit email setup form (Authenticated users only)
-
-## 📞 Support
-
-For issues or questions, please refer to the application logs or contact the development team.
-
-## 🏆 License
-
-This project is proprietary software developed for internal use.
+For support or questions, contact the development team or raise an issue in the project repository.

@@ -165,23 +165,7 @@ public class TestDataFactory {
         return user;
     }
 
-    public static List<TournamentRegistration> createTournamentRegistrationsForTournament(Tournament tournament, int count) {
-        return IntStream.range(0, count)
-                .mapToObj(i -> createTournamentRegistrationWithTournament(tournament))
-                .toList();
-    }
-
-    public static List<Game> createGamesForTournament(Tournament tournament, int count) {
-        return IntStream.range(0, count)
-                .mapToObj(i -> createGameWithTournament(tournament))
-                .toList();
-    }
-
-    // Utility methods
-    public static Long randomId() {
-        return faker.number().randomNumber();
-    }
-
+    // Utility methods for generating random data
     public static String randomEmail() {
         return faker.internet().emailAddress();
     }
@@ -194,7 +178,27 @@ public class TestDataFactory {
         return faker.name().lastName();
     }
 
+    public static String randomPassword() {
+        return faker.internet().password(8, 20);
+    }
+
+    public static Long randomId() {
+        return faker.number().randomNumber();
+    }
+
     public static int randomScore() {
         return faker.number().numberBetween(0, 21);
+    }
+
+    public static List<TournamentRegistration> createTournamentRegistrationsForTournament(Tournament tournament, int count) {
+        return IntStream.range(0, count)
+                .mapToObj(i -> createTournamentRegistrationWithTournament(tournament))
+                .toList();
+    }
+
+    public static List<Game> createGamesForTournament(Tournament tournament, int count) {
+        return IntStream.range(0, count)
+                .mapToObj(i -> createGameWithTournament(tournament))
+                .toList();
     }
 }

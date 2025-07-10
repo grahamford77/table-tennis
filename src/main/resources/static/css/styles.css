@@ -1,0 +1,138 @@
+/* Password Reset Form Styles */
+.reset-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.reset-form h2 {
+    color: #333;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.reset-form p {
+    color: #666;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* Forgot Password Link on Login Page */
+.forgot-password-link {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.forgot-password-link .link {
+    color: #00DEB6;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.forgot-password-link .link:hover {
+    text-decoration: underline;
+}
+
+/* Success and Error Pages */
+.success-page, .error-page {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.success-icon, .error-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.success-icon {
+    color: #28a745;
+}
+
+.error-icon {
+    color: #dc3545;
+}
+
+.instructions, .help-text {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    text-align: left;
+}
+
+.instructions h3, .help-text p strong {
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.instructions ul, .help-text ul {
+    padding-left: 1.5rem;
+    color: #666;
+}
+
+.instructions li, .help-text li {
+    margin-bottom: 0.5rem;
+}
+
+/* Action Buttons for Error Page */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.action-buttons .btn {
+    flex: 1;
+    max-width: 200px;
+}
+
+/* Back Link Styling */
+.back-link {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.back-link .link {
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.back-link .link:hover {
+    color: #00DEB6;
+    text-decoration: underline;
+}
+
+/* Form Text Helper */
+.form-text {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Button Full Width */
+.btn-full-width {
+    width: 100%;
+}
+
+/* Secondary Button Variant */
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+    border-color: #4e555b;
+}

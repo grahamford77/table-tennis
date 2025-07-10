@@ -14,6 +14,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * User entity for authentication and authorization
  */
@@ -34,26 +36,38 @@ public class User {
 
     @Column(nullable = false)
     @NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
 
     @Column(unique = true)
-    @Email(message = "Please provide a valid email address")
+    @Email(message = "Email should be valid")
     private String email;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
     @Column(nullable = false)
     private boolean enabled = true;
 
-    public User(String username, String password, Role role) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
+    // Password reset fields
+    @Column(name = "password_reset_token")
+    private String passwordResetToken;
+
+    @Column(name = "password_reset_token_expiry")
+    private LocalDateTime passwordResetTokenExpiry;
 
     public enum Role {
         USER, ADMIN
+    }
+
+    public boolean isPasswordResetTokenValid() {
+        return passwordResetToken != null &&
+               passwordResetTokenExpiry != null &&
+               passwordResetTokenExpiry.isAfter(LocalDateTime.now());
+    }
+
+    public void clearPasswordResetToken() {
+        this.passwordResetToken = null;
+        this.passwordResetTokenExpiry = null;
     }
 }

@@ -25,6 +25,9 @@ dependencies {
     implementation 'com.h2database:h2'
     implementation 'org.postgresql:postgresql'
 
+    // Mailjet API for sending emails
+    implementation 'com.mailjet:mailjet-client:6.0.0'
+
     // Liquibase 4.32.0 - Compatible with Gradle plugin 2.2.2
     implementation 'org.liquibase:liquibase-core:4.32.0'
 

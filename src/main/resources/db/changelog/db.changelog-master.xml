@@ -3,12 +3,13 @@
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.32.xsd">
 
     <!-- Include all changelog files -->
     <include file="db/changelog/v1.0/001-initial-schema.xml"/>
     <include file="db/changelog/v1.0/002-insert-initial-data.xml"/>
     <include file="db/changelog/v1.1/001-add-more-players-and-registrations.xml"/>
     <include file="db/changelog/v1.2/001-add-email-to-users.xml"/>
+    <include file="db/changelog/v1.3/001-add-password-reset-fields.xml"/>
 
 </databaseChangeLog>

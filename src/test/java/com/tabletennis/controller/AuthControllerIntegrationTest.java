@@ -40,7 +40,7 @@ class AuthControllerIntegrationTest {
     void login_WithLogoutParameter_ShouldDisplayLogoutMessage() throws Exception {
         mockMvc.perform(get("/login").param("logout", "true"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("logged out successfully")));
+                .andExpect(content().string(containsString("You have been successfully logged out")));
     }
 
     @Test
@@ -50,6 +50,6 @@ class AuthControllerIntegrationTest {
                 .param("logout", "true"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Invalid username or password")))
-                .andExpect(content().string(containsString("logged out successfully")));
+                .andExpect(content().string(containsString("You have been successfully logged out")));
     }
 }

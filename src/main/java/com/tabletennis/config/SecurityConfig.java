@@ -41,6 +41,7 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/tournaments/**").hasRole("ADMIN")
                 .requestMatchers("/setup-email").authenticated()
+                .requestMatchers("/forgot-password", "/forgot-password-success", "/reset-password").permitAll()
                 .anyRequest().permitAll()
             )
             .formLogin(form -> form
